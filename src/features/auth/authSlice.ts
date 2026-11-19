@@ -7,7 +7,6 @@ const storedToken = localStorage.getItem("buzzboard_token");
 const initialState: AuthState = {
   user: storedUser ? JSON.parse(storedUser) : null,
   token: storedToken || null,
-  isAuthModalOpen: false,
 };
 
 const authSlice = createSlice({
@@ -29,11 +28,8 @@ const authSlice = createSlice({
       localStorage.removeItem("buzzboard_user");
       localStorage.removeItem("buzzboard_token");
     },
-    setAuthModalOpen: (state, action: PayloadAction<boolean>) => {
-      state.isAuthModalOpen = action.payload;
-    },
   },
 });
 
-export const { setCredentials, logout, setAuthModalOpen } = authSlice.actions;
+export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;

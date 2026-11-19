@@ -13,14 +13,13 @@ import {
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
 import { formatDate } from "@/utils/cn";
-import { useNavigate } from "react-router-dom";
-import { setAuthModalOpen } from "@/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/app/hooks";
 import { Layers, Plus, ArrowRight, BookOpen } from "lucide-react";
 
 export const SeriesPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const location = useLocation();
   const { user } = useAppSelector((state) => state.auth);
 
   const { data: seriesRes, isLoading } = useGetSeriesListQuery();
@@ -35,7 +34,7 @@ export const SeriesPage: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      dispatch(setAuthModalOpen(true));
+      navigate("/login", { state: { from: location.pathname } });
       return;
     }
     if (!title.trim()) return;

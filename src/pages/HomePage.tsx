@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDate, formatNumber } from "@/utils/cn";
 import { CATEGORY_OPTIONS } from "@/utils/AllOptions";
 import { AdBannerSlot } from "@/components/layout/AdBannerSlot";
+import { PlatformModesSection } from "@/components/layout/PlatformModesSection";
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -125,6 +126,9 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Platform Modes Section */}
+      <PlatformModesSection />
 
       {/* Search & Category Filter Bar */}
       <section className="rounded-xl surface-3d p-4 sm:p-5">

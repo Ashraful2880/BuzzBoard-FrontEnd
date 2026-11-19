@@ -36,15 +36,14 @@ import {
 import React, { useState } from "react";
 import { formatDate, formatNumber } from "@/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { setAuthModalOpen } from "@/features/auth/authSlice";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useAppSelector } from "@/app/hooks";
 import { AdBannerSlot } from "@/components/layout/AdBannerSlot";
 
 export const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const location = useLocation();
   const { user } = useAppSelector((state) => state.auth);
 
   const { data: postRes, isLoading } = useGetPostByIdQuery(id || "");
@@ -94,7 +93,7 @@ export const PostDetailPage: React.FC = () => {
 
   const requireAuth = () => {
     if (!user) {
-      dispatch(setAuthModalOpen(true));
+      navigate("/login", { state: { from: location.pathname } });
       return false;
     }
     return true;

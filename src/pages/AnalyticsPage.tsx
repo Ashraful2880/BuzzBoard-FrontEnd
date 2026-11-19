@@ -23,11 +23,12 @@ import {
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
 import { formatNumber } from "@/utils/cn";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { setAuthModalOpen } from "@/features/auth/authSlice";
+import { useAppSelector } from "@/app/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AnalyticsPage: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAppSelector((state) => state.auth);
 
   const { data: creatorRes, isLoading: isCreatorLoading } =
@@ -50,7 +51,7 @@ export const AnalyticsPage: React.FC = () => {
   const handleCreateCampaign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      dispatch(setAuthModalOpen(true));
+      navigate("/login", { state: { from: location.pathname } });
       return;
     }
     if (!title || !sponsorName || !targetUrl) return;

@@ -20,7 +20,7 @@ import { CustomButton } from "@/components/shared";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { logout, setAuthModalOpen } from "@/features/auth/authSlice";
+import { logout } from "@/features/auth/authSlice";
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -242,7 +242,7 @@ export const Navbar: React.FC = () => {
                 size="sm"
                 variant="secondary"
                 leftIcon={<UserIcon className="w-3.5 h-3.5" />}
-                onClick={() => dispatch(setAuthModalOpen(true))}
+                onClick={() => navigate("/login")}
               >
                 Sign In
               </CustomButton>

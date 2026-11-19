@@ -1,4 +1,5 @@
 import { HomePage } from "@/pages/HomePage";
+import { AuthPage } from "@/pages/AuthPage";
 import { StudioPage } from "@/pages/StudioPage";
 import { SeriesPage } from "@/pages/SeriesPage";
 import { Navbar } from "@/components/layout/Navbar";
@@ -7,7 +8,7 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { BookmarksPage } from "@/pages/BookmarksPage";
 import { PostDetailPage } from "@/pages/PostDetailPage";
-import { AuthModal } from "@/components/layout/AuthModal";
+import { OAuthCallbackPage } from "@/pages/OAuthCallbackPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export function App() {
@@ -15,11 +16,16 @@ export function App() {
     <BrowserRouter>
       <div className="min-h-screen flex flex-col bg-[#F6F7F9] text-[#0F172A] relative">
         <Navbar />
-        <AuthModal />
 
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<AuthPage initialMode="login" />} />
+            <Route
+              path="/register"
+              element={<AuthPage initialMode="register" />}
+            />
+            <Route path="/auth/callback" element={<OAuthCallbackPage />} />
             <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="/studio" element={<StudioPage />} />
             <Route path="/series" element={<SeriesPage />} />

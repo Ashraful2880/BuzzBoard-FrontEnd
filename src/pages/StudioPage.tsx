@@ -22,15 +22,14 @@ import {
   useModerateContentMutation,
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { AdSafetyResult } from "@/types/postTypes";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { setAuthModalOpen } from "@/features/auth/authSlice";
+import { useAppSelector } from "@/app/hooks";
 import { AI_ACTIONS, AI_TONES, CATEGORY_OPTIONS } from "@/utils/AllOptions";
 
 export const StudioPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const location = useLocation();
   const { user } = useAppSelector((state) => state.auth);
 
   const [title, setTitle] = useState("");
@@ -105,7 +104,7 @@ export const StudioPage: React.FC = () => {
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      dispatch(setAuthModalOpen(true));
+      navigate("/login", { state: { from: location.pathname } });
       return;
     }
 
