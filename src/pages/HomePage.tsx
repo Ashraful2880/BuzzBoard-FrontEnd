@@ -32,9 +32,11 @@ import { formatDate, formatNumber } from "@/utils/cn";
 import { CATEGORY_OPTIONS } from "@/utils/AllOptions";
 import { AdBannerSlot } from "@/components/layout/AdBannerSlot";
 import { PlatformModesSection } from "@/components/layout/PlatformModesSection";
+import { useAppSelector } from "@/app/hooks";
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { token } = useAppSelector((state) => state.auth);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [adSafeOnly, setAdSafeOnly] = useState(false);
@@ -293,6 +295,10 @@ export const HomePage: React.FC = () => {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                if (!token) {
+                                  navigate("/login");
+                                  return;
+                                }
                                 toggleBookmark(post._id);
                               }}
                               title="Save to Reading List"

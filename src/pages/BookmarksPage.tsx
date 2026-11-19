@@ -11,13 +11,17 @@ import {
   useToggleBookmarkMutation,
 } from "@/features/api/buzzboardApi";
 import { formatDate } from "@/utils/cn";
+import { useAppSelector } from "@/app/hooks";
 
 export const BookmarksPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: bookmarksRes, isLoading } = useGetBookmarksQuery();
+  const { token } = useAppSelector((state) => state.auth);
+  const { data: bookmarksRes, isLoading } = useGetBookmarksQuery(undefined, {
+    skip: !token,
+  });
   const [toggleBookmark] = useToggleBookmarkMutation();
 
-  const bookmarks = bookmarksRes?.data || [];
+  const bookmarks = token ? bookmarksRes?.data || [] : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-8">
@@ -32,7 +36,15 @@ export const BookmarksPage: React.FC = () => {
         </span>
       </div>
 
-      {isLoading ? (
+      {!token ? (
+        <EmptyState
+          icon={<Bookmark className="w-6 h-6" />}
+          title="Sign In to View Your Reading List"
+          description="Sign in with your BuzzBoard account to save and access bookmarked technical articles."
+          actionLabel="Sign In"
+          onAction={() => navigate("/login", { state: { from: "/bookmarks" } })}
+        />
+      ) : isLoading ? (
         <SkeletonLoader variant="card" count={2} />
       ) : bookmarks.length === 0 ? (
         <EmptyState

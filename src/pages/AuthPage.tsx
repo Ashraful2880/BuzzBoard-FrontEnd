@@ -1,18 +1,12 @@
 import {
-  useLoginMutation,
-  useRegisterMutation,
-} from "@/features/api/buzzboardApi";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
+  Eye,
   Mail,
   Lock,
-  Eye,
-  EyeOff,
   LogIn,
+  EyeOff,
+  Layers,
   UserPlus,
   Sparkles,
-  Layers,
   BarChart3,
   ArrowRight,
   AlertCircle,
@@ -20,14 +14,22 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { CustomButton, CustomInput } from "@/components/shared";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import {
+  useLoginMutation,
+  useRegisterMutation,
+} from "@/features/api/buzzboardApi";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { setCredentials } from "@/features/auth/authSlice";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
-
-interface AuthPageProps {
-  initialMode?: "login" | "register";
-}
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { CustomButton, CustomInput } from "@/components/shared";
+import { AuthPageProps } from "@/types";
 
 const GoogleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -57,11 +59,11 @@ const HIGHLIGHTS = [
   },
   {
     icon: <Layers className="w-4 h-4 text-orange-600" />,
-    title: "Structured Technical Series"
+    title: "Structured Technical Series",
   },
   {
     icon: <BarChart3 className="w-4 h-4 text-orange-600" />,
-    title: "Reader Telemetry & Sponsorships"
+    title: "Reader Telemetry & Sponsorships",
   },
 ];
 
@@ -74,12 +76,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
 
-  const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [oauthNotice, setOauthNotice] = useState<string | null>(null);
 
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
@@ -175,7 +177,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch lg:min-h-[610px]">
         {/* Left Column: Editorial Brand Showcase */}
         <motion.div
@@ -385,11 +387,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       <div className="relative">
                         <CustomInput
                           required
-                          type={showPassword ? "text" : "password"}
                           label="Password"
                           value={password}
                           placeholder="••••••••"
                           leftIcon={<Lock className="w-4 h-4" />}
+                          type={showPassword ? "text" : "password"}
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <button

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import {
   TiltCard3D,
+  EmptyState,
   CustomInput,
   CustomButton,
   CustomSelect,
@@ -30,7 +31,7 @@ import { AI_ACTIONS, AI_TONES, CATEGORY_OPTIONS } from "@/utils/AllOptions";
 export const StudioPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, token } = useAppSelector((state) => state.auth);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -132,6 +133,24 @@ export const StudioPage: React.FC = () => {
       }, 900);
     }
   };
+
+  if (!user || !token) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-12">
+        <EmptyState
+          icon={<Wand2 className="w-6 h-6" />}
+          title="Sign In to Open Editorial Studio"
+          description="Create an account or sign in to write, optimize SEO, and publish technical articles on BuzzBoard."
+          actionLabel="Sign In"
+          onAction={() => navigate("/login", { state: { from: "/studio" } })}
+          secondaryLabel="Create Account"
+          onSecondaryAction={() =>
+            navigate("/register", { state: { from: "/studio" } })
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-8">

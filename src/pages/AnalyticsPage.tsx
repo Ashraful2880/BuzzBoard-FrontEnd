@@ -29,12 +29,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, token } = useAppSelector((state) => state.auth);
 
   const { data: creatorRes, isLoading: isCreatorLoading } =
-    useGetCreatorAnalyticsQuery();
+    useGetCreatorAnalyticsQuery(undefined, { skip: !token });
   const { data: monetizationRes, isLoading: isMonLoading } =
-    useGetMonetizationAnalyticsQuery();
+    useGetMonetizationAnalyticsQuery(undefined, { skip: !token });
   const [createAd, { isLoading: isCreatingAd }] = useCreateAdCampaignMutation();
 
   const [title, setTitle] = useState("");

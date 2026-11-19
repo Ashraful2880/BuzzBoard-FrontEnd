@@ -24,3 +24,7 @@ export interface AuthState {
   user: User | null;
   token: string | null;
 }
+
+export interface AuthPageProps {
+  initialMode?: "login" | "register";
+}
