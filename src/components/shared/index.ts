@@ -6,3 +6,5 @@ export * from "./TiltCard3D";
 export * from "./SkeletonLoader";
 export * from "./EmptyState";
 export * from "./HeroCarousel3D";
+export * from "./SectionHeader";
+export * from "./ConfirmModal";

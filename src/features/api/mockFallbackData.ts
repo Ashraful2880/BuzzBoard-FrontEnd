@@ -1,4 +1,11 @@
-import type { Post, SeriesItem, AdCampaign, CommentItem, NotificationItem, User } from "@/types";
+import type {
+  Post,
+  User,
+  SeriesItem,
+  AdCampaign,
+  CommentItem,
+  NotificationItem,
+} from "@/types";
 
 export const DEMO_AUTHOR: User = {
   _id: "678900000000000000000001",
@@ -19,7 +26,8 @@ export const DEMO_AUTHOR: User = {
 export const FALLBACK_POSTS: Post[] = [
   {
     _id: "678900000000000000000101",
-    title: "Architecting Multi-Tenant Cloud ERP Systems with Fastify, PostgreSQL & Redis",
+    title:
+      "Architecting Multi-Tenant Cloud ERP Systems with Fastify, PostgreSQL & Redis",
     slug: "architecting-multi-tenant-cloud-erp-systems-fastify-101",
     excerpt:
       "How we designed row-level tenant isolation, RBAC permission pipelines, and AI-driven predictive stock forecasting for high-throughput enterprise workloads.",
@@ -84,7 +92,8 @@ Integrating Jitsi Meet with short-lived room tokens and RESTful session handshak
   },
   {
     _id: "678900000000000000000103",
-    title: "Eliminating Duplicate Network Requests: Redux Toolkit & RTK Query in Fintech",
+    title:
+      "Eliminating Duplicate Network Requests: Redux Toolkit & RTK Query in Fintech",
     slug: "eliminating-duplicate-network-requests-rtk-query-fintech-103",
     excerpt:
       "A practical breakdown of how refactoring legacy state fetching to RTK Query improved fintech dashboard page load speeds by 35% while enforcing strict data security.",

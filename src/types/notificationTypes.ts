@@ -9,8 +9,8 @@ export interface NotificationItem {
   type: "like" | "reaction" | "comment" | "reply" | "follow" | "system";
   post?: {
     _id: string;
-    title: string;
     slug: string;
+    title: string;
   } | null;
   message: string;
   isRead: boolean;

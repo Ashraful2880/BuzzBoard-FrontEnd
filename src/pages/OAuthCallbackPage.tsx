@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "@/app/hooks";
 import { setCredentials } from "@/features/auth/authSlice";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const OAuthCallbackPage: React.FC = () => {
   const navigate = useNavigate();

@@ -169,7 +169,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{ duration: 0.16 }}
-            className="absolute z-50 left-0 mt-1.5 w-80 rounded-lg surface-3d-elevated p-4"
+            className="absolute z-50 left-0 mt-1.5 w-80 max-w-[calc(100vw-2rem)] rounded-lg surface-3d-elevated p-4"
           >
             <div className="flex items-center gap-1.5 mb-3 pb-2.5 border-b border-slate-100">
               <button

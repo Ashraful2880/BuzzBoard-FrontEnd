@@ -2,6 +2,7 @@ import { HomePage } from "@/pages/HomePage";
 import { AuthPage } from "@/pages/AuthPage";
 import { StudioPage } from "@/pages/StudioPage";
 import { SeriesPage } from "@/pages/SeriesPage";
+import { ProfilePage } from "@/pages/ProfilePage";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/pages/NotFoundPage";
@@ -31,6 +32,7 @@ export function App() {
             <Route path="/series" element={<SeriesPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/bookmarks" element={<BookmarksPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

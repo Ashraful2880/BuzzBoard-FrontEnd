@@ -34,12 +34,12 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="mt-20 border-t border-slate-200 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8 space-y-12">
+    <footer className="mt-4 sm:mt-6 border-t border-slate-200 bg-white">
+      <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto py-8 space-y-5">
         {/* Newsletter Strip */}
         <div className="rounded-xl bg-[#FAF9F7] border border-slate-200 p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="max-w-xl space-y-1.5">
-            <span className="inline-block px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider rounded bg-orange-50 text-orange-700 border border-orange-200 font-semibold">
+            <span className="inline-block text-[13px]  text-orange-700 font-semibold">
               Weekly Engineering Digest
             </span>
             <h3 className="text-xl sm:text-2xl font-display font-bold text-slate-950">
@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* 4-Column Professional Editorial Footer */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-8 border-b border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-5 border-b border-slate-200 pt-5">
           {/* Brand Column */}
           <div className="lg:col-span-5 space-y-4">
             <Link to="/" className="inline-flex items-center gap-2.5">
@@ -263,10 +263,10 @@ export const Footer: React.FC = () => {
             <a
               target="_blank"
               rel="noreferrer"
-              href="https://ashrafulislam.netlify.app"
+              href="https://madmind.tech"
               className="font-semibold text-orange-600 hover:underline"
             >
-              Md Ashraful Islam
+              MadMind Technology
             </a>
           </p>
         </div>

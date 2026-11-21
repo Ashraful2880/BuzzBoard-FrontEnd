@@ -1,17 +1,18 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Bookmark, Clock, ArrowRight, Trash2 } from "lucide-react";
 import {
-  TiltCard3D,
-  SkeletonLoader,
   EmptyState,
+  TiltCard3D,
+  SectionHeader,
+  SkeletonLoader,
 } from "@/components/shared";
 import {
   useGetBookmarksQuery,
   useToggleBookmarkMutation,
 } from "@/features/api/buzzboardApi";
+import React from "react";
 import { formatDate } from "@/utils/cn";
 import { useAppSelector } from "@/app/hooks";
+import { useNavigate } from "react-router-dom";
+import { Bookmark, Clock, ArrowRight, Trash2 } from "lucide-react";
 
 export const BookmarksPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,44 +25,44 @@ export const BookmarksPage: React.FC = () => {
   const bookmarks = token ? bookmarksRes?.data || [] : [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-display font-bold text-slate-950 flex items-center gap-2.5">
-          <Bookmark className="w-5 h-5 text-orange-600" />
-          <span>Saved Articles</span>
-        </h1>
-
-        <span className="text-xs font-mono text-slate-500">
-          {bookmarks.length} saved {bookmarks.length === 1 ? "article" : "articles"}
-        </span>
-      </div>
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-5">
+      <SectionHeader
+        title="Saved"
+        badge="Reading List"
+        highlight="Articles"
+        badgeIcon={<Bookmark className="w-3 h-3" />}
+      />
 
       {!token ? (
-        <EmptyState
-          icon={<Bookmark className="w-6 h-6" />}
-          title="Sign In to View Your Reading List"
-          description="Sign in with your BuzzBoard account to save and access bookmarked technical articles."
-          actionLabel="Sign In"
-          onAction={() => navigate("/login", { state: { from: "/bookmarks" } })}
-        />
+        <div className="max-w-3xl mx-auto">
+          <EmptyState
+            icon={""}
+            actionLabel="Sign In"
+            title="Sign In to View Your Reading List"
+            onAction={() =>
+              navigate("/login", { state: { from: "/bookmarks" } })
+            }
+            description="Sign in with your BuzzBoard account to save and access bookmarked technical articles."
+          />
+        </div>
       ) : isLoading ? (
         <SkeletonLoader variant="card" count={2} />
       ) : bookmarks.length === 0 ? (
         <EmptyState
-          icon={<Bookmark className="w-6 h-6" />}
-          title="Your Reading List is Empty"
-          description="Bookmark any technical article from the Explore feed to save it here for distraction-free reading later."
           actionLabel="Explore Articles"
           onAction={() => navigate("/")}
+          title="Your Reading List is Empty"
+          icon={<Bookmark className="w-6 h-6" />}
+          description="Bookmark any technical article from the Explore feed to save it here for distraction-free reading later."
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {bookmarks.map((post) => (
             <TiltCard3D
-              key={post._id}
               intensity={6}
+              key={post._id}
               onClick={() => navigate(`/posts/${post.slug || post._id}`)}
-              className="p-6 flex flex-col justify-between gap-4"
+              className="p-4 sm:p-6 flex flex-col justify-between gap-4"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -90,11 +91,11 @@ export const BookmarksPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    title="Remove bookmark"
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleBookmark(post._id);
                     }}
-                    title="Remove bookmark"
                     className="p-2 rounded-md bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

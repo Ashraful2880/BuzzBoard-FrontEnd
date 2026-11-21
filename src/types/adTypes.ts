@@ -1,23 +1,28 @@
 export interface AdCampaign {
   _id: string;
+  ctr: number;
   title: string;
-  sponsorName: string;
+  clicks: number;
+  budget: number;
+  ctaText: string;
   targetUrl: string;
   imageUrl?: string;
+  createdAt: string;
+  sponsorName: string;
+  impressions: number;
   description?: string;
-  ctaText: string;
-  placement: "header_banner" | "sidebar" | "in_article" | "footer" | "sponsored_post";
+  endDate?: string | null;
   targetCategories: string[];
   status: "active" | "paused" | "completed" | "draft";
-  impressions: number;
-  clicks: number;
-  ctr: number;
-  budget: number;
-  endDate?: string | null;
-  createdAt: string;
+  placement:
+    | "header_banner"
+    | "sidebar"
+    | "in_article"
+    | "footer"
+    | "sponsored_post";
 }
 
 export interface AdBannerSlotProps {
-  placement?: "in_article" | "sidebar" | "header_banner";
   category?: string;
+  placement?: "in_article" | "sidebar" | "header_banner";
 }

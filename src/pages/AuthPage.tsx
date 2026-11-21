@@ -2,10 +2,8 @@ import {
   Eye,
   Mail,
   Lock,
-  LogIn,
   EyeOff,
   Layers,
-  UserPlus,
   Sparkles,
   BarChart3,
   ArrowRight,
@@ -13,7 +11,6 @@ import {
   CheckCircle2,
   User as UserIcon,
 } from "lucide-react";
-import { cn } from "@/utils/cn";
 import {
   Link,
   useLocation,
@@ -24,12 +21,12 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from "@/features/api/buzzboardApi";
+import { AuthPageProps } from "@/types";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { setCredentials } from "@/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { CustomButton, CustomInput } from "@/components/shared";
-import { AuthPageProps } from "@/types";
 
 const GoogleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -54,16 +51,16 @@ const GoogleIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 const HIGHLIGHTS = [
   {
-    icon: <Sparkles className="w-4 h-4 text-orange-600" />,
     title: "AI Editorial Studio",
+    icon: <Sparkles className="w-4 h-4 text-orange-600" />,
   },
   {
-    icon: <Layers className="w-4 h-4 text-orange-600" />,
     title: "Structured Technical Series",
+    icon: <Layers className="w-4 h-4 text-orange-600" />,
   },
   {
-    icon: <BarChart3 className="w-4 h-4 text-orange-600" />,
     title: "Reader Telemetry & Sponsorships",
+    icon: <BarChart3 className="w-4 h-4 text-orange-600" />,
   },
 ];
 
@@ -177,17 +174,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch lg:min-h-[610px]">
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:min-h-[62vh]">
         {/* Left Column: Editorial Brand Showcase */}
         <motion.div
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.35 }}
-          className="hidden lg:flex lg:col-span-6 h-full relative rounded-2xl surface-3d-elevated px-10 py-8 flex-col justify-between overflow-hidden bg-architectural-grid"
+          className="hidden lg:flex lg:col-span-6 h-full relative rounded-lg surface-3d-elevated px-10 py-6 flex-col justify-between overflow-hidden bg-architectural-grid"
         >
-          <div className="pointer-events-none absolute -top-24 -left-16 w-72 h-72 rounded-full bg-gradient-to-tr from-orange-400/20 via-amber-300/15 to-rose-300/15 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-24 -right-12 w-80 h-80 rounded-full bg-gradient-to-bl from-amber-300/20 via-orange-300/15 to-slate-200/20 blur-2xl" />
+          <div className="pointer-events-none absolute -top-24 -left-16 w-72 h-72 rounded-full bg-gradient-to-tr from-orange-400/20 via-amber-300/20 to-rose-300/20 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-12 w-80 h-80 rounded-full bg-gradient-to-bl from-amber-300/20 via-orange-300/20 to-slate-200/20 blur-2xl" />
 
           <div className="relative z-10 space-y-2">
             <Link to="/" className="inline-flex items-center gap-2.5">
@@ -201,22 +198,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               </span>
             </Link>
 
-            <div className="space-y-3 pt-2">
-              <h1 className="text-2xl xl:text-3xl font-bold text-slate-950 ">
+            <div className="pt-2">
+              <h1 className="text-2xl xl:text-3xl font-extrabold text-slate-950 ">
                 Write, structure, and scale your{" "}
                 <span className="text-orange-600">engineering notes</span>.
               </h1>
-              <p className="text-[13px] text-slate-600 leading-relaxed max-w-md">
-                Sign in with Google or email to publish articles, curate
-                multi-part series, and monitor live reader analytics.
-              </p>
             </div>
 
-            <div className="space-y-4 pt-6">
-              {HIGHLIGHTS.map((item) => (
+            <div className="space-y-2 pt-4">
+              {HIGHLIGHTS?.map((item) => (
                 <div
                   key={item.title}
-                  className="flex items-center gap-3.5 p-2.5 rounded-md bg-white/80 border border-slate-200/80"
+                  className="flex items-center gap-3.5 p-2.5"
                 >
                   <div className="w-9 h-9 rounded-full bg-orange-50 border border-orange-200/80 flex items-center justify-center shrink-0">
                     {item.icon}
@@ -231,7 +224,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
           </div>
 
-          <div className="relative z-10 pt-6 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
+          <div className="relative z-10 flex items-center justify-between text-xs text-slate-500">
             <span>Built for modern software builders</span>
             <Link
               to="/"
@@ -250,93 +243,64 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           transition={{ duration: 0.35 }}
           className="lg:col-span-6 flex"
         >
-          <div className="w-full h-full rounded-2xl surface-3d-elevated p-6 sm:p-9 flex flex-col justify-between gap-6">
-            {/* Animated Mode Switcher Tabs (clean, background-free) */}
-            <div className="relative grid grid-cols-2 border-b border-slate-200">
-              {(
-                [
-                  {
-                    id: "login",
-                    label: "Sign In",
-                    icon: <LogIn className="w-4 h-4" />,
-                  },
-                  {
-                    id: "register",
-                    label: "Create Account",
-                    icon: <UserPlus className="w-4 h-4" />,
-                  },
-                ] as const
-              ).map((tab) => {
-                const isActive = mode === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => switchMode(tab.id)}
-                    className={cn(
-                      "relative flex items-center justify-center gap-2 pb-3 pt-1 px-3 text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer",
-                      isActive
-                        ? "text-slate-950"
-                        : "text-slate-500 hover:text-slate-800",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "transition-colors",
-                        isActive ? "text-orange-600" : "text-slate-400",
-                      )}
-                    >
-                      {tab.icon}
+          <div className="relative w-full h-full rounded-2xl surface-3d-elevated p-6 sm:p-9 flex flex-col justify-between gap-1 overflow-hidden">
+            {/* Subtle Ambient Shapes */}
+            <div className="pointer-events-none absolute -top-20 -right-20 w-56 h-56 rounded-full bg-gradient-to-bl from-orange-300/20 via-amber-200/15 to-transparent blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-gradient-to-tr from-amber-200/20 via-orange-200/10 to-transparent blur-2xl" />
+
+            {/* Top Brand & Mode Header */}
+            <div className="relative z-10 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-200/80 flex items-center justify-center">
+                  <img
+                    src="/logo.png"
+                    alt="BuzzBoard"
+                    className="w-5 h-5 object-contain"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs font-display font-bold text-slate-950 leading-none">
+                    Buzz<span className="text-orange-600">Board</span>{" "}
+                    <span className="text-slate-400 font-normal">
+                      Workspace
                     </span>
-                    <span>{tab.label}</span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="authTabIndicator"
-                        transition={{
-                          type: "spring",
-                          stiffness: 420,
-                          damping: 32,
-                        }}
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-600 rounded-full"
-                      />
-                    )}
-                  </button>
-                );
-              })}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {mode === "login"
+                      ? "Sign in to continue writing & reading"
+                      : "Create your free author account"}
+                  </p>
+                </div>
+              </div>
+
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200/80 text-[11px] font-semibold text-orange-700 shrink-0">
+                {mode === "login"
+                  ? "Login Your Account"
+                  : "Register Your Account"}
+              </span>
             </div>
 
-            {/* Animated Mode Content (fixed outer card height prevents left-panel jitter) */}
-            <div className="flex-1 flex flex-col justify-center">
+            {/* Center Form Content */}
+            <div className="relative z-10 flex-1 flex flex-col just">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={mode}
+                  exit={{ opacity: 0, y: -8 }}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="space-y-5"
+                  className={`space-y-2 ${mode === "login" ? "pt-8" : "pt-1"}`}
                 >
-                  {/* Header */}
-                  <div className="space-y-1">
-                    <h2 className="text-2xl font-display font-bold text-slate-950">
-                      {mode === "login"
-                        ? "Welcome back to BuzzBoard"
-                        : "Create your BuzzBoard account"}
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-500">
-                      {mode === "login"
-                        ? "Sign in with Google or email to access your workspace."
-                        : "Register with your email to start publishing technical articles."}
-                    </p>
-                  </div>
-
-                  {/* Google OAuth Button (Sign In only) */}
-                  {mode === "login" && (
-                    <div className="space-y-5">
+                  {/* Top Google OAuth (Register mode only) */}
+                  {mode === "register" && (
+                    <div className="space-y-2 text-center">
+                      <p className="text-xs font-medium text-slate-500">
+                        Register with:
+                      </p>
                       <button
                         type="button"
                         onClick={handleGoogleAuth}
-                        className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-xs sm:text-sm font-semibold text-slate-800 transition-colors cursor-pointer"
+                        className="inline-flex items-center justify-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 text-xs sm:text-[13px] font-medium text-slate-800 transition-all cursor-pointer"
                       >
                         <GoogleIcon className="w-4 h-4 shrink-0" />
                         <span>Continue with Google</span>
@@ -352,9 +316,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       {/* Divider */}
                       <div className="relative flex items-center">
                         <div className="flex-grow border-t border-slate-200" />
-                        <span className="px-3 text-[11px] font-mono uppercase tracking-wider text-slate-400">
-                          or continue with email
-                        </span>
+                        <span className="px-3 text-xs text-slate-400">Or</span>
                         <div className="flex-grow border-t border-slate-200" />
                       </div>
                     </div>
@@ -377,10 +339,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       required
                       type="email"
                       value={email}
-                      label="Email Address"
+                      label="Email"
                       placeholder="you@company.com"
-                      onChange={(e) => setEmail(e.target.value)}
                       leftIcon={<Mail className="w-4 h-4" />}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <div className="space-y-1.5">
@@ -389,7 +351,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                           required
                           label="Password"
                           value={password}
-                          placeholder="••••••••"
+                          placeholder="Password"
                           leftIcon={<Lock className="w-4 h-4" />}
                           type={showPassword ? "text" : "password"}
                           onChange={(e) => setPassword(e.target.value)}
@@ -409,6 +371,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                           )}
                         </button>
                       </div>
+                      {mode === "register" && (
+                        <p className="text-[11px] text-slate-500">
+                          Minimum length is 6 characters.
+                        </p>
+                      )}
                     </div>
 
                     {errorMsg && (
@@ -418,47 +385,59 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       </div>
                     )}
 
-                    <CustomButton
-                      fullWidth
-                      size="lg"
-                      type="submit"
-                      variant="primary"
-                      isLoading={isLoggingIn || isRegistering}
-                      rightIcon={<ArrowRight className="w-4 h-4" />}
+                    {/* Action Row: Mode Switch + Compact Submit Button */}
+                    <div
+                      className={`flex flex-wrap items-center justify-between gap-3 ${mode === "login" ? "pt-6" : "pt-0"}`}
                     >
-                      {mode === "login" ? "Sign In" : "Create Account"}
-                    </CustomButton>
+                      <p className="text-xs text-slate-500">
+                        {mode === "login" ? (
+                          <>
+                            New to BuzzBoard?{" "}
+                            <button
+                              type="button"
+                              onClick={() => switchMode("register")}
+                              className="font-semibold text-orange-600 hover:text-orange-700 cursor-pointer"
+                            >
+                              Create a free account
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            Already have an account?{" "}
+                            <button
+                              type="button"
+                              onClick={() => switchMode("login")}
+                              className="font-semibold text-orange-600 hover:text-orange-700 cursor-pointer"
+                            >
+                              Login Here
+                            </button>
+                          </>
+                        )}
+                      </p>
+
+                      <CustomButton
+                        size="md"
+                        type="submit"
+                        variant="primary"
+                        className="px-6"
+                        isLoading={isLoggingIn || isRegistering}
+                        rightIcon={<ArrowRight className="w-4 h-4" />}
+                      >
+                        {mode === "login" ? "Login" : "Registration"}
+                      </CustomButton>
+                    </div>
                   </form>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Footer Link */}
-            <p className="text-center text-xs text-slate-500 pt-1">
-              {mode === "login" ? (
-                <>
-                  New to BuzzBoard?{" "}
-                  <button
-                    type="button"
-                    onClick={() => switchMode("register")}
-                    className="font-semibold text-orange-600 hover:text-orange-700 cursor-pointer"
-                  >
-                    Create a free account
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => switchMode("login")}
-                    className="font-semibold text-orange-600 hover:text-orange-700 cursor-pointer"
-                  >
-                    Sign in instead
-                  </button>
-                </>
-              )}
-            </p>
+            {/* Bottom Editorial Strip */}
+            {mode === "login" && (
+              <div className="relative z-10 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                <span>Instant access to Studio, Series &amp; Reading List</span>
+                <span className="font-mono text-slate-500">BuzzBoard v1.0</span>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

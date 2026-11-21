@@ -10,11 +10,11 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
   (
     {
       label,
-      helperText,
       error,
       leftIcon,
-      rightElement,
       className,
+      helperText,
+      rightElement,
       containerClassName,
       id,
       ...props
@@ -83,15 +83,15 @@ export const CustomTextarea = React.forwardRef<
 >(
   (
     {
-      label,
-      helperText,
+      id,
       error,
+      label,
+      value,
       showCount,
       maxLength,
       className,
+      helperText,
       containerClassName,
-      value,
-      id,
       ...props
     },
     ref,

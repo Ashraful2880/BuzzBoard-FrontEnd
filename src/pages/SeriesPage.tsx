@@ -4,6 +4,7 @@ import {
   CustomInput,
   CustomSelect,
   CustomButton,
+  SectionHeader,
   SkeletonLoader,
   CustomTextarea,
 } from "@/components/shared";
@@ -13,8 +14,8 @@ import {
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
 import { formatDate } from "@/utils/cn";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/app/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Layers, Plus, ArrowRight, BookOpen } from "lucide-react";
 
 export const SeriesPage: React.FC = () => {
@@ -44,15 +45,15 @@ export const SeriesPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-10">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-display font-bold text-slate-950 flex items-center gap-2.5">
-          <Layers className="w-5 h-5 text-orange-600" />
-          <span>Engineering Series &amp; Guides</span>
-        </h1>
-      </div>
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto sm:space-y-5 space-y-3">
+      <SectionHeader
+        badge="Curriculum"
+        badgeIcon={<Layers className="w-3 h-3" />}
+        title="Engineering"
+        highlight="Series & Guides"
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
         <div className="lg:col-span-8">
           {isLoading ? (
             <SkeletonLoader variant="card" count={2} />
@@ -63,25 +64,25 @@ export const SeriesPage: React.FC = () => {
               description="Create your first multi-part series using the form on the right to organize related articles."
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
               {seriesList.map((s) => (
                 <TiltCard3D
                   key={s._id}
                   intensity={5}
                   onClick={() => navigate("/")}
-                  className="p-6 flex flex-col justify-between gap-4"
+                  className="p-3 sm:p-6 flex flex-col justify-between gap-3 sm:gap-4"
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-[11px] font-mono text-orange-700 font-semibold">
+                      <span className="px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-[11px] text-orange-700 font-semibold">
                         {s.category}
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-mono uppercase font-semibold">
+                      <span className="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] uppercase font-semibold">
                         {s.status}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-display font-bold text-slate-950 leading-snug">
+                    <h3 className="text-lg font-display font-bold text-slate-950">
                       {s.title}
                     </h3>
                     <p className="text-xs text-slate-600 leading-relaxed">
@@ -89,7 +90,7 @@ export const SeriesPage: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <div className="pt-3 sm:pt-4 flex items-center justify-between text-xs text-slate-500">
                     <span className="flex items-center gap-1.5">
                       <BookOpen className="w-3.5 h-3.5 text-slate-400" />
                       Created {formatDate(s.createdAt)}
@@ -106,7 +107,7 @@ export const SeriesPage: React.FC = () => {
 
         <form
           onSubmit={handleCreate}
-          className="lg:col-span-4 rounded-xl surface-3d-elevated p-6 space-y-4 h-fit"
+          className="lg:col-span-4 rounded-lg sm:rounded-xl surface-3d-elevated p-3 sm:p-6 space-y-4 h-fit"
         >
           <div className="flex items-center gap-2">
             <Layers className="w-5 h-5 text-orange-600" />
@@ -119,8 +120,8 @@ export const SeriesPage: React.FC = () => {
             required
             value={title}
             label="Series Title"
+            placeholder="Enter Title..."
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter title..."
           />
 
           <CustomSelect

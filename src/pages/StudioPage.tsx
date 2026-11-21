@@ -12,6 +12,7 @@ import {
   CustomInput,
   CustomButton,
   CustomSelect,
+  SectionHeader,
   CustomTextarea,
   CustomDatePicker,
 } from "@/components/shared";
@@ -23,9 +24,9 @@ import {
   useModerateContentMutation,
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import type { AdSafetyResult } from "@/types/postTypes";
 import { useAppSelector } from "@/app/hooks";
+import type { AdSafetyResult } from "@/types/postTypes";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AI_ACTIONS, AI_TONES, CATEGORY_OPTIONS } from "@/utils/AllOptions";
 
 export const StudioPage: React.FC = () => {
@@ -136,31 +137,42 @@ export const StudioPage: React.FC = () => {
 
   if (!user || !token) {
     return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-12">
-        <EmptyState
-          icon={<Wand2 className="w-6 h-6" />}
-          title="Sign In to Open Editorial Studio"
-          description="Create an account or sign in to write, optimize SEO, and publish technical articles on BuzzBoard."
-          actionLabel="Sign In"
-          onAction={() => navigate("/login", { state: { from: "/studio" } })}
-          secondaryLabel="Create Account"
-          onSecondaryAction={() =>
-            navigate("/register", { state: { from: "/studio" } })
-          }
+      <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-4 sm:space-y-5">
+        <SectionHeader
+          badge="Editorial Studio"
+          title="Write, Optimize &"
+          highlight="Schedule Articles"
+          badgeIcon={<Wand2 className="w-3 h-3" />}
         />
+
+        <div className="max-w-3xl mx-auto">
+          <EmptyState
+            icon={""}
+            actionLabel="Sign In"
+            secondaryLabel="Create Account"
+            title="Sign In to Open Editorial Studio"
+            onAction={() => navigate("/login", { state: { from: "/studio" } })}
+            description="Create an account or sign in to write, optimize SEO, and publish technical articles on BuzzBoard."
+            onSecondaryAction={() =>
+              navigate("/register", { state: { from: "/studio" } })
+            }
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-display font-bold text-slate-950 flex items-center gap-2.5">
-          <Wand2 className="w-5 h-5 text-orange-600" />
-          <span>Write, Optimize &amp; Schedule Articles</span>
-        </h1>
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-4 sm:space-y-8">
+      <div className="space-y-4">
+        <SectionHeader
+          badge="Editorial Studio"
+          title="Write, Optimize &"
+          highlight="Schedule Articles"
+          badgeIcon={<Wand2 className="w-3 h-3" />}
+        />
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <CustomButton
             size="sm"
             variant="secondary"
@@ -192,7 +204,7 @@ export const StudioPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <form
           onSubmit={handlePublish}
-          className="lg:col-span-8 rounded-xl surface-3d p-6 sm:p-8 space-y-5"
+          className="lg:col-span-8 rounded-lg surface-3d p-4 sm:p-8 space-y-5"
         >
           <CustomInput
             required
@@ -244,16 +256,16 @@ export const StudioPage: React.FC = () => {
           </div>
 
           <CustomTextarea
-            label="SEO Meta Description (<= 160 chars)"
             rows={2}
             showCount
             maxLength={160}
             value={metaDescription}
-            placeholder="Concise summary for search engines..."
+            label="SEO Meta Description (<= 160 chars)"
+            placeholder="Concise Summary for Search Engines..."
             onChange={(e) => setMetaDescription(e.target.value)}
           />
 
-          <div className="pt-2 flex items-center justify-end gap-3">
+          <div className="sm:pt-2 flex items-center justify-end gap-3">
             <CustomButton
               size="lg"
               type="submit"
@@ -266,8 +278,8 @@ export const StudioPage: React.FC = () => {
           </div>
         </form>
 
-        <div className="lg:col-span-4 space-y-6">
-          <TiltCard3D intensity={4} elevated className="p-6 space-y-4">
+        <div className="lg:col-span-4 space-y-3 sm:space-y-6">
+          <TiltCard3D intensity={4} elevated className="p-4 sm:p-6">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600">
                 <Wand2 className="w-4 h-4" />
@@ -284,6 +296,7 @@ export const StudioPage: React.FC = () => {
 
             <CustomSelect
               label="Action"
+              className="mt-4"
               value={aiAction}
               options={AI_ACTIONS}
               onChange={setAiAction}
@@ -291,6 +304,7 @@ export const StudioPage: React.FC = () => {
 
             <CustomSelect
               value={aiTone}
+              className="mt-4 mb-4"
               options={AI_TONES}
               onChange={setAiTone}
               label="Editorial Tone"
@@ -306,6 +320,7 @@ export const StudioPage: React.FC = () => {
             <CustomButton
               fullWidth
               variant="emerald"
+              className="mt-4"
               isLoading={isAssisting}
               onClick={handleRunCoPilot}
               leftIcon={<Sparkles className="w-4 h-4" />}
@@ -314,7 +329,7 @@ export const StudioPage: React.FC = () => {
             </CustomButton>
           </TiltCard3D>
 
-          <div className="rounded-2xl surface-3d p-6 space-y-3">
+          <div className="rounded-lg sm:rounded-2xl surface-3d p-4 sm:p-6 space-y-3">
             <h4 className="text-sm font-display font-bold text-slate-950 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>AdSense Policy Check</span>

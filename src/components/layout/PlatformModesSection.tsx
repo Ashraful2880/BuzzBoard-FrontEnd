@@ -1,38 +1,30 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen,
   Edit3,
   Layers,
-  BarChart3,
   Sparkles,
-  CheckCircle2,
+  BookOpen,
+  BarChart3,
   ArrowRight,
+  CheckCircle2,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
-import { CustomButton } from "@/components/shared";
-
-interface PlatformMode {
-  id: "reader" | "studio" | "series" | "analytics";
-  name: string;
-  shortLabel: string;
-  badge: string;
-  tagline: string;
-  description: string;
-  highlights: string[];
-  route: string;
-  ctaLabel: string;
-  icon: React.ReactNode;
-}
+import { PlatformMode } from "@/types";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { CustomButton, SectionHeader } from "@/components/shared";
 
 const PLATFORM_MODES: PlatformMode[] = [
   {
     id: "reader",
     name: "Reader Mode",
-    shortLabel: "Focused Reading",
+    route: "/bookmarks",
     badge: "AI-Assisted",
-    tagline: "Distraction-free reading with AI summaries & bilingual translation",
+    shortLabel: "Focused Reading",
+    ctaLabel: "Open Reading List",
+    icon: <BookOpen className="w-4 h-4" />,
+    tagline:
+      "Distraction-free reading with AI summaries & bilingual translation",
     description:
       "Dive into long-form engineering notes with instant TL;DR summaries, interactive Q&A on article content, and one-click bilingual translation.",
     highlights: [
@@ -40,15 +32,15 @@ const PLATFORM_MODES: PlatformMode[] = [
       "Ask contextual questions directly against any published post",
       "Bookmark articles to your personal Reading List",
     ],
-    route: "/bookmarks",
-    ctaLabel: "Open Reading List",
-    icon: <BookOpen className="w-4 h-4" />,
   },
   {
     id: "studio",
+    route: "/studio",
+    badge: "Co-Pilot",
     name: "Editorial Studio",
     shortLabel: "AI Writing",
-    badge: "Co-Pilot",
+    ctaLabel: "Launch Studio",
+    icon: <Edit3 className="w-4 h-4" />,
     tagline: "AI co-pilot drafting, automated SEO & brand-safety checks",
     description:
       "Draft technical articles faster with tone-aware AI assistance, automated SEO metadata extraction, and pre-publish brand-safety moderation.",
@@ -57,15 +49,15 @@ const PLATFORM_MODES: PlatformMode[] = [
       "Auto-generate SEO excerpts, meta descriptions, and tags",
       "Verify ad-safe & brand-safe compliance before publishing",
     ],
-    route: "/studio",
-    ctaLabel: "Launch Studio",
-    icon: <Edit3 className="w-4 h-4" />,
   },
   {
     id: "series",
+    route: "/series",
     name: "Series Mode",
-    shortLabel: "Multi-Part Guides",
     badge: "Structured",
+    ctaLabel: "Browse Series",
+    shortLabel: "Multi-Part Guides",
+    icon: <Layers className="w-4 h-4" />,
     tagline: "Organize deep-dive articles into multi-part engineering guides",
     description:
       "Turn standalone posts into cohesive multi-part courses and architectural guides so readers can follow complex topics step by step.",
@@ -74,15 +66,15 @@ const PLATFORM_MODES: PlatformMode[] = [
       "Track series status and category organization at a glance",
       "Keep readers engaged across multi-chapter deep dives",
     ],
-    route: "/series",
-    ctaLabel: "Browse Series",
-    icon: <Layers className="w-4 h-4" />,
   },
   {
     id: "analytics",
+    route: "/analytics",
+    badge: "Live Telemetry",
     name: "Creator Analytics",
     shortLabel: "Growth & Ads",
-    badge: "Live Telemetry",
+    ctaLabel: "View Analytics",
+    icon: <BarChart3 className="w-4 h-4" />,
     tagline: "Real-time readership telemetry & direct sponsorship campaigns",
     description:
       "Measure how your technical writing performs and manage direct sponsor placements with transparent impression and click tracking.",
@@ -91,9 +83,6 @@ const PLATFORM_MODES: PlatformMode[] = [
       "Monitor sponsorship campaign budgets, impressions, and CTR",
       "Create targeted in-article and sidebar ad placements",
     ],
-    route: "/analytics",
-    ctaLabel: "View Analytics",
-    icon: <BarChart3 className="w-4 h-4" />,
   },
 ];
 
@@ -103,37 +92,28 @@ export const PlatformModesSection: React.FC = () => {
     useState<PlatformMode["id"]>("reader");
 
   const activeMode =
-    PLATFORM_MODES.find((m) => m.id === activeModeId) || PLATFORM_MODES[0];
+    PLATFORM_MODES?.find((m) => m.id === activeModeId) || PLATFORM_MODES[0];
 
   return (
-    <section className="rounded-xl surface-3d p-6 sm:p-8 space-y-6">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div className="space-y-1.5">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-50 border border-orange-200 text-[11px] font-semibold text-orange-700">
-            <Sparkles className="w-3 h-3" />
-            Platform Modes
-          </span>
-          <h2 className="text-xl sm:text-2xl font-display font-bold text-slate-950">
-            Choose Your Publishing Mode
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-2xl">
-            Switch seamlessly between focused reading, AI-assisted authoring,
-            structured series, and creator monetization.
-          </p>
-        </div>
-      </div>
+    <section className="rounded-lg surface-3d p-3 sm:p-8 space-y-7">
+      {/* Shared Centered Section Header */}
+      <SectionHeader
+        title="Choose Your"
+        badge="Platform Modes"
+        highlight="Publishing Mode"
+        badgeIcon={<Sparkles className="w-3 h-3" />}
+      />
 
       {/* Mode Selector + Active Preview */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Left: 4 Mode Selector Cards */}
         <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
-          {PLATFORM_MODES.map((mode) => {
-            const isActive = mode.id === activeMode.id;
+          {PLATFORM_MODES?.map((mode) => {
+            const isActive = mode?.id === activeMode?.id;
             return (
               <button
-                key={mode.id}
                 type="button"
+                key={mode?.id}
                 onClick={() => setActiveModeId(mode.id)}
                 className={cn(
                   "text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3",
@@ -165,7 +145,7 @@ export const PlatformModesSection: React.FC = () => {
 
                 <span
                   className={cn(
-                    "px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold shrink-0 border",
+                    "px-2 py-0.5 rounded-md text-[10px] font-semibold shrink-0 border",
                     isActive
                       ? "bg-white border-orange-200 text-orange-700"
                       : "bg-white border-slate-200 text-slate-500",
@@ -183,11 +163,11 @@ export const PlatformModesSection: React.FC = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeMode.id}
+              exit={{ opacity: 0, y: -8 }}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="h-full rounded-xl surface-3d-elevated bg-architectural-grid p-6 sm:p-7 flex flex-col justify-between gap-6"
+              className="h-full rounded-lg surface-3d-elevated bg-architectural-grid p-4 sm:p-7 flex flex-col justify-between gap-6"
             >
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -195,7 +175,7 @@ export const PlatformModesSection: React.FC = () => {
                     {activeMode.icon}
                     <span>{activeMode.name}</span>
                   </span>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-orange-600 font-semibold">
+                  <span className="text-[11px] uppercase tracking-wider text-orange-600 font-semibold">
                     {activeMode.badge}
                   </span>
                 </div>
@@ -227,8 +207,8 @@ export const PlatformModesSection: React.FC = () => {
                   Ready to switch into {activeMode.name}?
                 </span>
                 <CustomButton
-                  variant="primary"
                   size="sm"
+                  variant="primary"
                   onClick={() => navigate(activeMode.route)}
                   rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
                 >

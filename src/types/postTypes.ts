@@ -15,14 +15,14 @@ export type PostCategory =
 export interface PostReactions {
   love: number;
   fire: number;
-  insightful: number;
   clap: number;
+  insightful: number;
 }
 
 export interface Post {
   _id: string;
-  title: string;
   slug: string;
+  title: string;
   content: string;
   excerpt: string;
   featuredImage?: {
@@ -30,37 +30,37 @@ export interface Post {
     public_id: string;
   };
   author: User;
-  category: PostCategory;
   tags: string[];
-  status: "draft" | "scheduled" | "published" | "archived";
-  scheduledAt?: string | null;
-  series?: string | null;
-  seriesOrder?: number;
-  aiGenerated?: boolean;
-  aiAssisted?: boolean;
-  aiSummary?: string;
-  readingTime: number;
-  isAdSafe: boolean;
-  adSafetyReason?: string;
-  isSponsored?: boolean;
-  sponsorName?: string;
-  sponsorUrl?: string;
-  likes: string[] | User[];
-  likesCount: number;
-  reactions?: PostReactions;
-  commentsCount: number;
   views: number;
-  liveReaders?: number;
-  engagementRate?: number;
-  metaDescription?: string;
-  canonicalUrl?: string;
+  isAdSafe: boolean;
   createdAt: string;
   updatedAt: string;
+  aiSummary?: string;
+  likesCount: number;
+  readingTime: number;
+  sponsorUrl?: string;
+  aiAssisted?: boolean;
+  seriesOrder?: number;
+  sponsorName?: string;
+  liveReaders?: number;
+  aiGenerated?: boolean;
+  isSponsored?: boolean;
+  commentsCount: number;
+  canonicalUrl?: string;
+  category: PostCategory;
+  series?: string | null;
+  adSafetyReason?: string;
+  engagementRate?: number;
+  likes: string[] | User[];
+  metaDescription?: string;
+  reactions?: PostReactions;
+  scheduledAt?: string | null;
+  status: "draft" | "scheduled" | "published" | "archived";
 }
 
 export interface AdSafetyResult {
+  reason: string;
   isAdSafe: boolean;
   adSafetyScore: number;
-  reason: string;
   flaggedCategories?: string[];
 }

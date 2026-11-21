@@ -8,17 +8,17 @@ import {
 import type { RootState } from "@/app/store";
 import type {
   Post,
+  User,
   SeriesItem,
   AdCampaign,
   CommentItem,
   NotificationItem,
-  User,
 } from "@/types";
 import {
   DEMO_AUTHOR,
+  FALLBACK_ADS,
   FALLBACK_POSTS,
   FALLBACK_SERIES,
-  FALLBACK_ADS,
   FALLBACK_COMMENTS,
   FALLBACK_NOTIFICATIONS,
 } from "./mockFallbackData";
@@ -28,7 +28,9 @@ const localPosts: Post[] = [...FALLBACK_POSTS];
 const localSeries: SeriesItem[] = [...FALLBACK_SERIES];
 const localAds: AdCampaign[] = [...FALLBACK_ADS];
 const localComments: CommentItem[] = [...FALLBACK_COMMENTS];
-let localNotifications: NotificationItem[] = FALLBACK_NOTIFICATIONS.map((n) => ({ ...n }));
+let localNotifications: NotificationItem[] = FALLBACK_NOTIFICATIONS.map(
+  (n) => ({ ...n }),
+);
 const localBookmarkedIds = new Set<string>([FALLBACK_POSTS[0]._id]);
 
 const rawBaseQuery = fetchBaseQuery({
@@ -63,14 +65,24 @@ const resilientBaseQuery: BaseQueryFn<
         data: {
           success: true,
           data: localPosts,
-          pagination: { current: 1, total: localPosts.length, page: 1, totalPages: 1 },
+          pagination: {
+            current: 1,
+            total: localPosts.length,
+            page: 1,
+            totalPages: 1,
+          },
         },
       };
     }
     return result;
   }
 
-  // Fallback simulation when backend is offline or MongoDB Atlas is not connected
+  // If the live server responded with an HTTP status (e.g. 400, 401, 403, 404), return the real error
+  if (result.error && typeof result.error.status === "number") {
+    return result;
+  }
+
+  // Fallback simulation when backend is offline or unreachable
   const url = typeof args === "string" ? args : args.url;
   const method =
     typeof args === "string" ? "GET" : (args.method || "GET").toUpperCase();
@@ -79,19 +91,25 @@ const resilientBaseQuery: BaseQueryFn<
       ? (args.body as Record<string, any>)
       : {};
 
-  // Auth fallbacks
+  // Never allow fake auth bypass when credentials are invalid or auth server is offline
   if (url.includes("/login") || url.includes("/register")) {
-    const user: User = {
-      ...DEMO_AUTHOR,
-      name: body.name || DEMO_AUTHOR.name,
-      email: body.email || DEMO_AUTHOR.email,
-      token: "demo_jwt_token_buzzboard_2026",
+    return {
+      error: {
+        status: 503,
+        data: {
+          success: false,
+          error: "Unable to reach authentication server. Please try again.",
+        },
+      } as FetchBaseQueryError,
     };
-    return { data: { success: true, data: user } };
   }
 
   // Posts list
-  if (url.startsWith("/posts") && method === "GET" && !url.includes("/posts/")) {
+  if (
+    url.startsWith("/posts") &&
+    method === "GET" &&
+    !url.includes("/posts/")
+  ) {
     const queryStr = url.split("?")[1] || "";
     const params = new URLSearchParams(queryStr);
     const category = params.get("category");
@@ -106,14 +124,19 @@ const resilientBaseQuery: BaseQueryFn<
         (p) =>
           p.title.toLowerCase().includes(search) ||
           p.excerpt.toLowerCase().includes(search) ||
-          p.tags.some((t) => t.toLowerCase().includes(search))
+          p.tags.some((t) => t.toLowerCase().includes(search)),
       );
     }
     return {
       data: {
         success: true,
         data: filtered,
-        pagination: { current: 1, total: filtered.length, page: 1, totalPages: 1 },
+        pagination: {
+          current: 1,
+          total: filtered.length,
+          page: 1,
+          totalPages: 1,
+        },
       },
     };
   }
@@ -142,7 +165,7 @@ const resilientBaseQuery: BaseQueryFn<
       seriesOrder: Number(body.seriesOrder) || 0,
       readingTime: Math.max(
         1,
-        Math.ceil(String(body.content || "").split(/\s+/).length / 200)
+        Math.ceil(String(body.content || "").split(/\s+/).length / 200),
       ),
       isAdSafe: true,
       aiAssisted: Boolean(body.aiAssisted),
@@ -164,7 +187,8 @@ const resilientBaseQuery: BaseQueryFn<
   // Post Summary
   if (url.endsWith("/summary")) {
     const id = url.split("/")[2];
-    const post = localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
+    const post =
+      localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
     const summary =
       post.aiSummary ||
       `TL;DR — ${post.title}:\n• ${post.excerpt}\n• Engineered for low latency, high scalability, and strict type safety.\n• Includes production-ready patterns for modern full-stack teams.`;
@@ -173,7 +197,12 @@ const resilientBaseQuery: BaseQueryFn<
       data: {
         success: true,
         cached: true,
-        data: { postId: post._id, title: post.title, summary, readingTime: post.readingTime },
+        data: {
+          postId: post._id,
+          title: post.title,
+          summary,
+          readingTime: post.readingTime,
+        },
       },
     };
   }
@@ -181,7 +210,8 @@ const resilientBaseQuery: BaseQueryFn<
   // Ask AI About Post
   if (url.endsWith("/ask") && method === "POST") {
     const id = url.split("/")[2];
-    const post = localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
+    const post =
+      localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
     return {
       data: {
         success: true,
@@ -199,7 +229,8 @@ const resilientBaseQuery: BaseQueryFn<
   // Translate Post
   if (url.includes("/translate") && method === "POST") {
     const id = url.split("/")[2];
-    const post = localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
+    const post =
+      localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
     const targetLang = body.targetLang || "bn";
     return {
       data: {
@@ -223,7 +254,8 @@ const resilientBaseQuery: BaseQueryFn<
   // Post Reactions
   if (url.endsWith("/react") && method === "POST") {
     const id = url.split("/")[2];
-    const post = localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
+    const post =
+      localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
     const rType = (body.type || "clap") as keyof NonNullable<Post["reactions"]>;
     if (!post.reactions) {
       post.reactions = { love: 0, fire: 0, insightful: 0, clap: 0 };
@@ -240,7 +272,8 @@ const resilientBaseQuery: BaseQueryFn<
   // Post Like
   if (url.endsWith("/like") && method === "POST") {
     const id = url.split("/")[2];
-    const post = localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
+    const post =
+      localPosts.find((p) => p._id === id || p.slug === id) || localPosts[0];
     post.likesCount = (post.likesCount || 0) + 1;
     return {
       data: {
@@ -299,7 +332,13 @@ const resilientBaseQuery: BaseQueryFn<
           ],
           excerpt: String(body.content || cleanTitle).substring(0, 180),
           metaDescription: String(body.content || cleanTitle).substring(0, 150),
-          tags: ["architecture", "typescript", "react", "nodejs", "scalability"],
+          tags: [
+            "architecture",
+            "typescript",
+            "react",
+            "nodejs",
+            "scalability",
+          ],
           slug: cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, "-"),
         },
       },
@@ -330,7 +369,8 @@ const resilientBaseQuery: BaseQueryFn<
         data: {
           isAdSafe: true,
           adSafetyScore: 98,
-          reason: "Content complies with Google AdSense & Brand Safety guidelines.",
+          reason:
+            "Content complies with Google AdSense & Brand Safety guidelines.",
           flaggedCategories: [],
         },
       },
@@ -340,7 +380,9 @@ const resilientBaseQuery: BaseQueryFn<
   // Series
   if (url.startsWith("/series") && method === "GET") {
     if (url === "/series") {
-      return { data: { success: true, count: localSeries.length, data: localSeries } };
+      return {
+        data: { success: true, count: localSeries.length, data: localSeries },
+      };
     }
     return {
       data: {
@@ -358,7 +400,9 @@ const resilientBaseQuery: BaseQueryFn<
     const created: SeriesItem = {
       _id: `series_${Date.now()}`,
       title: body.title,
-      slug: `${String(body.title).toLowerCase().replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`,
+      slug: `${String(body.title)
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-")}-${Date.now().toString(36)}`,
       description: body.description || "",
       category: body.category || "Technology",
       author: DEMO_AUTHOR,
@@ -410,11 +454,18 @@ const resilientBaseQuery: BaseQueryFn<
     const adId = url.split("/")[2];
     const ad = localAds.find((a) => a._id === adId) || localAds[0];
     ad.clicks += 1;
-    ad.ctr = Number(((ad.clicks / Math.max(ad.impressions, 1)) * 100).toFixed(2));
+    ad.ctr = Number(
+      ((ad.clicks / Math.max(ad.impressions, 1)) * 100).toFixed(2),
+    );
     return {
       data: {
         success: true,
-        data: { adId: ad._id, targetUrl: ad.targetUrl, clicks: ad.clicks, ctr: ad.ctr },
+        data: {
+          adId: ad._id,
+          targetUrl: ad.targetUrl,
+          clicks: ad.clicks,
+          ctr: ad.ctr,
+        },
       },
     };
   }
@@ -457,7 +508,9 @@ const resilientBaseQuery: BaseQueryFn<
             activeCampaigns: localAds.length,
             totalImpressions,
             totalClicks,
-            averageCtr: Number(((totalClicks / Math.max(totalImpressions, 1)) * 100).toFixed(2)),
+            averageCtr: Number(
+              ((totalClicks / Math.max(totalImpressions, 1)) * 100).toFixed(2),
+            ),
             totalBudget: localAds.reduce((s, a) => s + a.budget, 0),
           },
           campaigns: localAds,
@@ -469,7 +522,10 @@ const resilientBaseQuery: BaseQueryFn<
   // Notifications
   if (url.startsWith("/notifications")) {
     if (method === "PATCH") {
-      localNotifications = localNotifications.map((n) => ({ ...n, isRead: true }));
+      localNotifications = localNotifications.map((n) => ({
+        ...n,
+        isRead: true,
+      }));
       return { data: { success: true } };
     }
     return {
@@ -481,10 +537,32 @@ const resilientBaseQuery: BaseQueryFn<
     };
   }
 
+  // Public Author Profile
+  if (url.startsWith("/users/") && url.endsWith("/profile") && method === "GET") {
+    const totalViews = localPosts.reduce((acc, p) => acc + (p.views || 0), 0);
+    const totalLikes = localPosts.reduce((acc, p) => acc + (p.likesCount || 0), 0);
+    return {
+      data: {
+        success: true,
+        data: {
+          author: DEMO_AUTHOR,
+          stats: {
+            publishedPosts: localPosts.length,
+            totalViews,
+            totalLikes,
+          },
+          posts: localPosts,
+        },
+      },
+    };
+  }
+
   // Bookmarks
   if (url === "/users/bookmarks" && method === "GET") {
     const bookmarked = localPosts.filter((p) => localBookmarkedIds.has(p._id));
-    return { data: { success: true, count: bookmarked.length, data: bookmarked } };
+    return {
+      data: { success: true, count: bookmarked.length, data: bookmarked },
+    };
   }
 
   if (url.startsWith("/users/bookmarks/") && method === "POST") {
@@ -529,22 +607,47 @@ export const buzzboardApi = createApi({
     "Notification",
     "Bookmark",
     "Analytics",
+    "Profile",
   ],
   endpoints: (builder) => ({
-    // Auth
-    login: builder.mutation<{ success: boolean; data: User }, Record<string, string>>({
+    // Auth & Profile
+    login: builder.mutation<
+      { success: boolean; data: User },
+      Record<string, string>
+    >({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
       }),
     }),
-    register: builder.mutation<{ success: boolean; data: User }, Record<string, string>>({
+    register: builder.mutation<
+      { success: boolean; data: User },
+      Record<string, string>
+    >({
       query: (userData) => ({
         url: "/auth/register",
         method: "POST",
         body: userData,
       }),
+    }),
+    getProfile: builder.query<
+      { success: boolean; data: User & { bookmarksCount?: number } },
+      void
+    >({
+      query: () => "/auth/profile",
+      providesTags: ["Profile"],
+    }),
+    updateProfile: builder.mutation<
+      { success: boolean; data: User },
+      FormData | Record<string, unknown>
+    >({
+      query: (body) => ({
+        url: "/auth/profile",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Profile", "Post"],
     }),
 
     // Posts
@@ -554,7 +657,13 @@ export const buzzboardApi = createApi({
         data: Post[];
         pagination?: { current: number; total: number; totalPages: number };
       },
-      { category?: string; search?: string; tag?: string; page?: number; adSafeOnly?: boolean } | void
+      {
+        category?: string;
+        search?: string;
+        tag?: string;
+        page?: number;
+        adSafeOnly?: boolean;
+      } | void
     >({
       query: (params) => {
         const qs = new URLSearchParams();
@@ -575,7 +684,10 @@ export const buzzboardApi = createApi({
       providesTags: (_res, _err, id) => [{ type: "Post", id }],
     }),
 
-    createPost: builder.mutation<{ success: boolean; data: Post }, Record<string, any>>({
+    createPost: builder.mutation<
+      { success: boolean; data: Post },
+      Record<string, any>
+    >({
       query: (postData) => ({
         url: "/posts",
         method: "POST",
@@ -592,31 +704,52 @@ export const buzzboardApi = createApi({
         url: `/posts/${postId}/like`,
         method: "POST",
       }),
-      invalidatesTags: (_res, _err, id) => [{ type: "Post", id }, "Post", "Analytics"],
+      invalidatesTags: (_res, _err, id) => [
+        { type: "Post", id },
+        "Post",
+        "Analytics",
+      ],
     }),
 
     reactToPost: builder.mutation<
-      { success: boolean; data: { postId: string; reactions: Post["reactions"] } },
-      { postId: string; type: "love" | "fire" | "insightful" | "clap"; count?: number }
+      {
+        success: boolean;
+        data: { postId: string; reactions: Post["reactions"] };
+      },
+      {
+        postId: string;
+        type: "love" | "fire" | "insightful" | "clap";
+        count?: number;
+      }
     >({
       query: ({ postId, type, count = 1 }) => ({
         url: `/posts/${postId}/react`,
         method: "POST",
         body: { type, count },
       }),
-      invalidatesTags: (_res, _err, { postId }) => [{ type: "Post", id: postId }, "Post"],
+      invalidatesTags: (_res, _err, { postId }) => [
+        { type: "Post", id: postId },
+        "Post",
+      ],
     }),
 
     // AI Features
     getPostSummary: builder.query<
-      { success: boolean; cached: boolean; data: { summary: string; readingTime: number } },
+      {
+        success: boolean;
+        cached: boolean;
+        data: { summary: string; readingTime: number };
+      },
       string
     >({
       query: (postId) => `/posts/${postId}/summary`,
     }),
 
     askPostQuestion: builder.mutation<
-      { success: boolean; data: { question: string; answer: string; provider: string } },
+      {
+        success: boolean;
+        data: { question: string; answer: string; provider: string };
+      },
       { postId: string; question: string }
     >({
       query: ({ postId, question }) => ({
@@ -665,7 +798,10 @@ export const buzzboardApi = createApi({
     }),
 
     assistWriting: builder.mutation<
-      { success: boolean; data: { result: string; action: string; tone: string } },
+      {
+        success: boolean;
+        data: { result: string; action: string; tone: string };
+      },
       { prompt?: string; content?: string; action: string; tone: string }
     >({
       query: (payload) => ({
@@ -695,7 +831,10 @@ export const buzzboardApi = createApi({
     }),
 
     // Comments
-    getPostComments: builder.query<{ success: boolean; data: CommentItem[] }, string>({
+    getPostComments: builder.query<
+      { success: boolean; data: CommentItem[] },
+      string
+    >({
       query: (postId) => `/posts/${postId}/comments`,
       providesTags: ["Comment"],
     }),
@@ -712,14 +851,36 @@ export const buzzboardApi = createApi({
       invalidatesTags: ["Comment", "Post"],
     }),
 
-    // Bookmarks & Follow
+    // Public Author Profile, Bookmarks & Follow
+    getPublicAuthorProfile: builder.query<
+      {
+        success: boolean;
+        data: {
+          author: User;
+          stats: {
+            publishedPosts: number;
+            totalViews: number;
+            totalLikes: number;
+          };
+          posts: Post[];
+        };
+      },
+      string
+    >({
+      query: (authorId) => `/users/${authorId}/profile`,
+      providesTags: ["Post"],
+    }),
+
     getBookmarks: builder.query<{ success: boolean; data: Post[] }, void>({
       query: () => "/users/bookmarks",
       providesTags: ["Bookmark"],
     }),
 
     toggleBookmark: builder.mutation<
-      { success: boolean; data: { isBookmarked: boolean; bookmarksCount: number } },
+      {
+        success: boolean;
+        data: { isBookmarked: boolean; bookmarksCount: number };
+      },
       string
     >({
       query: (postId) => ({
@@ -730,7 +891,10 @@ export const buzzboardApi = createApi({
     }),
 
     // Series
-    getSeriesList: builder.query<{ success: boolean; data: SeriesItem[] }, void>({
+    getSeriesList: builder.query<
+      { success: boolean; data: SeriesItem[] },
+      void
+    >({
       query: () => "/series",
       providesTags: ["Series"],
     }),
@@ -784,7 +948,10 @@ export const buzzboardApi = createApi({
     }),
 
     recordAdClick: builder.mutation<
-      { success: boolean; data: { targetUrl: string; clicks: number; ctr: number } },
+      {
+        success: boolean;
+        data: { targetUrl: string; clicks: number; ctr: number };
+      },
       string
     >({
       query: (adId) => ({
@@ -878,6 +1045,8 @@ export const buzzboardApi = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
   useGetPostsQuery,
   useGetPostByIdQuery,
   useCreatePostMutation,
@@ -893,6 +1062,7 @@ export const {
   useCreateCommentMutation,
   useGetBookmarksQuery,
   useToggleBookmarkMutation,
+  useGetPublicAuthorProfileQuery,
   useGetSeriesListQuery,
   useCreateSeriesMutation,
   useGetActiveAdsQuery,

@@ -1,13 +1,11 @@
 import React from "react";
 import { cn } from "@/utils/cn";
-import { Inbox } from "lucide-react";
 import { motion } from "framer-motion";
 import { TiltCard3D } from "./TiltCard3D";
 import { CustomButton } from "./CustomButton";
 import type { EmptyStateProps } from "@/types/sharedTypes";
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon,
   title,
   onAction,
   className,
@@ -25,12 +23,8 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     >
       <TiltCard3D
         intensity={4}
-        className="p-10 sm:p-14 text-center flex flex-col items-center justify-center space-y-5 bg-architectural-grid"
+        className="p-6 sm:p-14 text-center flex flex-col items-center justify-center space-y-5 bg-architectural-grid"
       >
-        <div className="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 shadow-sm">
-          {icon || <Inbox className="w-6 h-6" />}
-        </div>
-
         <div className="max-w-md space-y-2">
           <h3 className="text-xl font-display font-bold text-slate-900">
             {title}

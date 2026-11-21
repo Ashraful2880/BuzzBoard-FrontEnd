@@ -13,6 +13,7 @@ import {
   CustomInput,
   CustomButton,
   CustomSelect,
+  SectionHeader,
   SkeletonLoader,
   CustomDatePicker,
 } from "@/components/shared";
@@ -68,83 +69,98 @@ export const AnalyticsPage: React.FC = () => {
     setSponsorName("");
   };
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-10">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-display font-bold text-slate-950 flex items-center gap-2.5">
-          <BarChart3 className="w-5 h-5 text-orange-600" />
-          <span>Analytics &amp; Ad Campaigns</span>
-        </h1>
+  if (!user || !token) {
+    return (
+      <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-5">
+        <SectionHeader
+          title="Analytics &"
+          badge="Telemetry & Ads"
+          highlight="Ad Campaigns"
+          badgeIcon={<BarChart3 className="w-3 h-3" />}
+        />
+
+        <div className="max-w-3xl mx-auto">
+          <EmptyState
+            icon={""}
+            actionLabel="Sign In"
+            secondaryLabel="Create Account"
+            title="Sign In to View Analytics"
+            onAction={() =>
+              navigate("/login", { state: { from: "/analytics" } })
+            }
+            description="Sign in with your BuzzBoard account to view creator analytics and manage sponsored ad campaigns."
+            onSecondaryAction={() =>
+              navigate("/register", { state: { from: "/analytics" } })
+            }
+          />
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-5">
+      <SectionHeader
+        title="Analytics &"
+        badge="Telemetry & Ads"
+        highlight="Ad Campaigns"
+        badgeIcon={<BarChart3 className="w-3 h-3" />}
+      />
 
       {isCreatorLoading ? (
         <SkeletonLoader variant="kpi" count={4} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <TiltCard3D intensity={5} className="p-5 space-y-2">
-            <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-5">
+          <TiltCard3D intensity={5} className="px-4 py-2 sm:py-3 space-y-2">
+            <div className="flex items-center justify-between text-emerald-700 text-xs font-medium">
               <span>Total Article Views</span>
               <Eye className="w-4 h-4 text-orange-600" />
             </div>
-            <p className="text-3xl font-display font-bold text-slate-950">
+            <p className="text-2xl sm:text-3xl font-display font-bold text-slate-950">
               {formatNumber(overview?.totalViews || 0)}
-            </p>
-            <p className="text-[11px] font-mono text-emerald-700">
-              Deduplicated Unique Views
             </p>
           </TiltCard3D>
 
-          <TiltCard3D intensity={5} className="p-5 space-y-2">
+          <TiltCard3D intensity={5} className="px-4 py-2 sm:py-3 space-y-2">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
               <span>Avg Engagement Rate</span>
               <Heart className="w-4 h-4 text-rose-500" />
             </div>
-            <p className="text-3xl font-display font-bold text-slate-950">
+            <p className="text-2xl sm:text-3xl font-display font-bold text-slate-950">
               {overview?.avgEngagementRate || 0}%
-            </p>
-            <p className="text-[11px] font-mono text-slate-500">
-              {overview?.totalLikes || 0} likes • {overview?.totalComments || 0}{" "}
-              comments
             </p>
           </TiltCard3D>
 
-          <TiltCard3D intensity={5} className="p-5 space-y-2">
+          <TiltCard3D intensity={5} className="px-4 py-2 sm:py-3 space-y-2">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
               <span>Ad Impressions</span>
               <MousePointerClick className="w-4 h-4 text-orange-600" />
             </div>
-            <p className="text-3xl font-display font-bold text-slate-950">
+            <p className="text-2xl sm:text-3xl font-display font-bold text-slate-950">
               {formatNumber(monSummary?.totalImpressions || 0)}
-            </p>
-            <p className="text-[11px] font-mono text-emerald-700">
-              {monSummary?.totalClicks || 0} clicks •{" "}
-              {monSummary?.averageCtr || 0}% CTR
             </p>
           </TiltCard3D>
 
-          <TiltCard3D intensity={5} className="p-5 space-y-2">
+          <TiltCard3D intensity={5} className="px-4 py-2 sm:py-3 space-y-2">
             <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-              <span>Policy Compliance</span>
+              <span>Verified Monetizable Posts</span>
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
             </div>
-            <p className="text-3xl font-display font-bold text-emerald-700">
+            <p className="text-2xl sm:text-3xl font-display font-bold text-emerald-700">
               {overview?.adSafeReadyPercentage ?? 100}%
-            </p>
-            <p className="text-[11px] font-mono text-slate-500">
-              Verified Monetizable Posts
             </p>
           </TiltCard3D>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-7 rounded-xl surface-3d p-6 space-y-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
+        <div className="lg:col-span-7 rounded-md surface-3d px-4 py-3 space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-display font-bold text-slate-950 flex items-center gap-2">
+            <h3 className="text-sm sm:text-lg font-display font-bold text-slate-950 flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-orange-600" />
               <span>Active Sponsored Campaigns</span>
             </h3>
-            <span className="text-xs font-mono text-slate-500">
+            <span className="text-xs text-slate-600 capotalize hidden sm:block">
               {campaigns.length} campaigns
             </span>
           </div>
@@ -153,8 +169,8 @@ export const AnalyticsPage: React.FC = () => {
             <SkeletonLoader variant="list" count={3} />
           ) : campaigns.length === 0 ? (
             <EmptyState
+              icon={""}
               title="No Ad Campaigns Yet"
-              icon={<Megaphone className="w-6 h-6" />}
               description="Launch your first sponsored banner or native in-article placement using the form on the right."
             />
           ) : (
@@ -162,7 +178,7 @@ export const AnalyticsPage: React.FC = () => {
               {campaigns.map((ad) => (
                 <div
                   key={ad._id}
-                  className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  className="px-4 py-2 rounded-md bg-slate-50/80 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
@@ -209,7 +225,7 @@ export const AnalyticsPage: React.FC = () => {
 
         <form
           onSubmit={handleCreateCampaign}
-          className="lg:col-span-5 rounded-xl surface-3d-elevated p-6 space-y-4 h-fit"
+          className="lg:col-span-5 rounded-md surface-3d-elevated px-4 py-3 space-y-4 h-fit"
         >
           <div className="flex items-center gap-2">
             <Megaphone className="w-5 h-5 text-orange-600" />
@@ -223,7 +239,7 @@ export const AnalyticsPage: React.FC = () => {
             value={title}
             label="Campaign Headline"
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Deploy Fastify APIs in 60 Seconds"
+            placeholder="Deploy Fastify APIs in 60 Seconds"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -268,15 +284,19 @@ export const AnalyticsPage: React.FC = () => {
             label="Campaign End Date (Optional)"
           />
 
-          <CustomButton
-            fullWidth
-            type="submit"
-            variant="primary"
-            isLoading={isCreatingAd}
-            leftIcon={<Plus className="w-4 h-4" />}
-          >
-            Activate Campaign
-          </CustomButton>
+          <div className="flex justify-end w-full">
+            <div className="inline-flex justify-end">
+              <CustomButton
+                fullWidth
+                type="submit"
+                variant="primary"
+                isLoading={isCreatingAd}
+                leftIcon={<Plus className="w-4 h-4" />}
+              >
+                Activate Campaign
+              </CustomButton>
+            </div>
+          </div>
         </form>
       </div>
     </div>

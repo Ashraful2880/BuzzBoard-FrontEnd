@@ -34,11 +34,11 @@ import {
   useAskPostQuestionMutation,
 } from "@/features/api/buzzboardApi";
 import React, { useState } from "react";
+import { useAppSelector } from "@/app/hooks";
 import { formatDate, formatNumber } from "@/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useAppSelector } from "@/app/hooks";
 import { AdBannerSlot } from "@/components/layout/AdBannerSlot";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 export const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -156,7 +156,7 @@ export const PostDetailPage: React.FC = () => {
   const comments = commentsRes?.data || [];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 space-y-8">
+    <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <CustomButton
           size="sm"
@@ -190,17 +190,17 @@ export const PostDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <article className="rounded-xl surface-3d-elevated p-6 sm:p-10 space-y-6 bg-white">
+      <article className="rounded-lg surface-3d-elevated p-6 sm:px-5 sm:py-4 space-y-2 bg-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-xs font-mono font-semibold text-orange-700">
-            {post.category}
+          <span className="px-2.5 py-0.5 rounded-full bg-orange-50 border border-orange-200 text-[11px] font-medium text-orange-700">
+            {post?.category}
           </span>
 
           <div className="flex items-center gap-4 text-xs font-mono text-slate-500">
             {post.liveReaders && post.liveReaders > 0 && (
               <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                {post.liveReaders} reading now
+                {post.liveReaders} Reading Now
               </span>
             )}
             <span className="flex items-center gap-1">
@@ -209,25 +209,25 @@ export const PostDetailPage: React.FC = () => {
             </span>
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              {post.readingTime} min read
+              {post.readingTime} Min Read
             </span>
           </div>
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-display font-bold text-slate-950 leading-tight">
+        <h1 className="text-2xl sm:text-3xl font-display font-bold text-slate-950 leading-tight">
           {displayedTitle}
         </h1>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-slate-900 text-white font-display font-bold flex items-center justify-center">
+        <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-slate-200">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-white font-display font-bold flex items-center justify-center">
               {post.author?.name?.charAt(0) || "A"}
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-900">
                 {post.author?.name || "Md Ashraful Islam"}
               </p>
-              <p className="text-xs font-mono text-slate-500">
+              <p className="text-xs text-slate-500">
                 Published {formatDate(post.createdAt)}
               </p>
             </div>
@@ -257,13 +257,13 @@ export const PostDetailPage: React.FC = () => {
         <AnimatePresence>
           {showSummary && (
             <motion.div
+              className="overflow-hidden"
+              exit={{ opacity: 0, height: 0 }}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
             >
               <div className="p-5 rounded-lg bg-orange-50/70 border border-orange-200 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-700 font-semibold">
+                <div className="flex items-center gap-2 text-xs uppercase text-orange-700 font-semibold">
                   <Sparkles className="w-4 h-4" />
                   <span>Article Summary</span>
                 </div>
@@ -277,11 +277,11 @@ export const PostDetailPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <div className="prose max-w-none text-slate-800 text-base leading-relaxed whitespace-pre-line">
+        <div className="prose max-w-none text-slate-800 text-sm leading-relaxed whitespace-pre-line pt-2">
           {displayedContent}
         </div>
 
-        <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-2">
+        <div className="pt-2 flex flex-wrap items-center gap-2">
           <CustomButton
             size="sm"
             variant="secondary"
@@ -323,7 +323,7 @@ export const PostDetailPage: React.FC = () => {
 
       <AdBannerSlot placement="in_article" category={post.category} />
 
-      <TiltCard3D intensity={3} className="p-6 sm:p-7 space-y-4">
+      <div className="p-6 sm:px-4 sm:py-4 space-y-4">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600">
             <Bot className="w-5 h-5" />
@@ -340,7 +340,7 @@ export const PostDetailPage: React.FC = () => {
 
         <form
           onSubmit={handleAskAI}
-          className="flex flex-col sm:flex-row gap-3"
+          className="flex flex-col sm:flex-row gap-3 mt-4"
         >
           <CustomInput
             value={question}
@@ -359,19 +359,19 @@ export const PostDetailPage: React.FC = () => {
         </form>
 
         {qaRes?.data?.answer && (
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-700 leading-relaxed">
+          <div className="p-3 rounded-md bg-slate-50 border border-slate-200 text-[13px] text-slate-700 leading-relaxed">
             {qaRes.data.answer}
           </div>
         )}
-      </TiltCard3D>
+      </div>
 
-      <section className="rounded-xl surface-3d p-6 sm:p-8 space-y-6">
+      <section className="rounded-md surface-3d p-6 sm:px-4 sm:py-4 space-y-3">
         <h3 className="text-lg font-display font-bold text-slate-950 flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-orange-600" />
           <span>Discussion ({comments.length})</span>
         </h3>
 
-        <form onSubmit={handlePostComment} className="space-y-3">
+        <form onSubmit={handlePostComment} className="space-y-1">
           <CustomTextarea
             rows={3}
             value={commentText}
@@ -400,17 +400,17 @@ export const PostDetailPage: React.FC = () => {
             {comments.map((c) => (
               <div
                 key={c._id}
-                className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200 space-y-3"
+                className="p-3 rounded-md bg-slate-50/80 border border-slate-200 space-y-3"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-900">
                     {c.author?.name || "Reader"}
                   </span>
-                  <span className="text-[11px] font-mono text-slate-400">
+                  <span className="text-[11px] text-slate-600">
                     {formatDate(c.createdAt)}
                   </span>
                 </div>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-[13px] text-slate-700 leading-relaxed">
                   {c.content}
                 </p>
 

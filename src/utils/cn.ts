@@ -21,3 +21,25 @@ export function formatNumber(num?: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return String(n);
 }
+
+export function resolveMediaUrl(url?: string): string {
+  if (!url) return "";
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("blob:") ||
+    url.startsWith("data:")
+  ) {
+    return url;
+  }
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl && (apiUrl.startsWith("http://") || apiUrl.startsWith("https://"))) {
+    try {
+      const origin = new URL(apiUrl).origin;
+      return `${origin}${url.startsWith("/") ? url : `/${url}`}`;
+    } catch {
+      return url;
+    }
+  }
+  return url;
+}

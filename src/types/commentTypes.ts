@@ -5,9 +5,9 @@ export interface CommentItem {
   post: string;
   author: User;
   content: string;
-  parentComment?: string | null;
+  createdAt: string;
   likesCount: number;
   isEdited?: boolean;
-  createdAt: string;
   replies?: CommentItem[];
+  parentComment?: string | null;
 }
