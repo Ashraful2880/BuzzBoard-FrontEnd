@@ -1,33 +1,42 @@
-# BuzzBoard Client
+# BuzzBoard Client — AI-Powered Technical Publishing & Ad-Tech Platform
 
-**BuzzBoard** is a modern technical publishing and editorial platform built with React 19, TypeScript, Vite, Tailwind CSS v4, and Redux Toolkit (RTK Query). It provides an editorial publishing studio, structured multi-part series, AI-assisted reading and writing tools, creator analytics, and direct sponsorship campaign management.
+**BuzzBoard** is a modern, responsive technical publishing, editorial workflow, and direct sponsorship platform built with **React 19, TypeScript, Vite 6, Tailwind CSS v4, Redux Toolkit (RTK Query), and Framer Motion**.
+
+- **Live Frontend**: `https://buzz-board-bd.vercel.app`
+- **Live Backend API**: `https://buzzboard-backend.onrender.com`
 
 ---
 
-## Features
+## Key Features & Engineering Highlights
 
-### Editorial & Publishing
-- **Home Feed (`/`)**: Browse technical articles with search, category filtering, trending posts, a 3D hero carousel (`HeroCarousel3D`), interactive 3D tilt cards (`TiltCard3D`), and sponsorship ad slots (`AdBannerSlot`).
-- **Post Reader (`/posts/:id`)**: Full article view with likes, emoji/post reactions, bookmarking, nested comments, AI-generated summaries, interactive Q&A on post content, and post translation.
-- **Editorial Studio (`/studio`)**: Create and publish articles with series assignment, AI writing assistance, automated SEO metadata generation, and content moderation checks.
-- **Structured Series (`/series`)**: Browse and create multi-part technical series.
-
-### Creator Tools & Personalization
-- **Analytics & Monetization (`/analytics`)**: View creator performance and monetization metrics, and create/manage direct ad campaigns.
-- **Bookmarks (`/bookmarks`)**: Save and manage bookmarked articles.
-- **Authentication & Notifications**: Modal-based login/registration (`AuthModal`) with JWT bearer token state (`authSlice`) and navbar notification support.
-- **Resilient Offline Fallback**: `resilientBaseQuery` in `src/features/api/buzzboardApi.ts` automatically falls back to in-memory mock data (`mockFallbackData.ts`) when the backend API is offline or unreachable, allowing full UI exploration without a running server.
+- **Modern Editorial Landing & Platform Modes (`/`)**:
+  - Animated hero showcase (`HeroEditorialShowcase`) cycling through AI SEO, Bilingual Reader, and Live Sponsorships.
+  - Interactive **Platform Modes** switcher (`PlatformModesSection`) for Reader Mode, Editorial Studio, Series Mode, and Creator Analytics.
+  - Searchable, category-filtered publication feed with **Ad-Safe Verified** filtering, trending articles, and a dynamic **Featured Creator** sidebar card.
+- **Authentication & Google OAuth 2.0 (`/login`, `/register`, `/auth/callback`)**:
+  - Dedicated sign-in and registration pages with **Google OAuth 2.0** integration, JWT bearer token persistence, and return-to-origin redirects.
+  - Protected routes (`Studio`, `Analytics`, `Reading List`, `Profile`) gracefully gate unauthenticated visitors without firing unauthorized `401` API requests.
+- **Editorial Studio (`/studio`)**:
+  - AI Writing Co-Pilot, automated SEO metadata & tag generation, pre-publish brand-safety moderation, and scheduled publishing.
+- **Smart Reader Experience (`/posts/:id`)**:
+  - 1-click AI TL;DR summaries, contextual Q&A against article content, bilingual translation (EN ↔ BN), reactions, bookmarks, and nested threaded comments.
+- **Creator Profile & Account Management (`/profile`)**:
+  - Avatar image upload (`FormData` + Cloudinary/local fallback), bio, portfolio & social links, password updates, and a portal-rendered shared confirmation modal (`ConfirmModal`) for sign-out.
+- **Analytics & Direct Ad-Tech (`/analytics`)**:
+  - Real-time creator telemetry (views, engagement rate, ad-safe readiness) and direct sponsored ad campaign creation (`in_article`, `sidebar`) with CTR tracking.
+- **Performance & Code Splitting**:
+  - Route-based `React.lazy` + `Suspense` splitting across secondary pages (`StudioPage`, `AnalyticsPage`, `ProfilePage`, `PostDetailPage`, etc.) to keep the initial bundle fast.
+  - Fully responsive across Mobile (`320px+`), Tablet (`768px+`), Laptop (`1280×720`), Desktop, and Large Desktop screens.
 
 ---
 
 ## Tech Stack
 
-- **Framework**: React 19 + TypeScript (`~5.7.2`)
-- **Build Tool**: Vite 6 (`@vitejs/plugin-react`)
+- **Core**: React 19, TypeScript (`~5.7.2`), Vite 6
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`), `clsx`, `tailwind-merge`
-- **State & Data Fetching**: Redux Toolkit & RTK Query (`@reduxjs/toolkit`, `react-redux`)
-- **Routing**: React Router v7 (`react-router-dom`)
-- **Animations & Icons**: Framer Motion (`framer-motion`), Lucide React (`lucide-react`)
+- **State & Networking**: Redux Toolkit + RTK Query (`@reduxjs/toolkit`, `react-redux`)
+- **Routing & Motion**: React Router v7 (`react-router-dom`), Framer Motion (`framer-motion`), Lucide React
+- **CI/CD**: GitHub Actions (`.github/workflows/ci.yml`), Vercel (`vercel.json` SPA rewrites)
 
 ---
 
@@ -35,39 +44,23 @@
 
 ```text
 BuzzBoard-Client/
+├── .github/workflows/ci.yml       # TypeScript check + Vite build CI
 ├── public/
 ├── src/
-│   ├── app/
-│   │   ├── hooks.ts                # Typed Redux hooks
-│   │   └── store.ts                # Redux store & RTK Query middleware
+│   ├── app/                       # Redux store & typed hooks
 │   ├── components/
-│   │   ├── layout/                 # Navbar, Footer, AuthModal, AdBannerSlot
-│   │   └── shared/                 # Reusable UI (CustomButton, CustomInput, CustomSelect,
-│   │                               # CustomDatePicker, HeroCarousel3D, TiltCard3D, SkeletonLoader, etc.)
+│   │   ├── layout/                # Navbar, Footer, AdBannerSlot, PlatformModesSection
+│   │   └── shared/                # HeroEditorialShowcase, SectionHeader, ConfirmModal, TiltCard3D, etc.
 │   ├── features/
-│   │   ├── api/
-│   │   │   ├── buzzboardApi.ts     # RTK Query endpoints & resilient fallback baseQuery
-│   │   │   └── mockFallbackData.ts # In-memory fallback dataset
-│   │   └── auth/
-│   │       └── authSlice.ts        # Authentication state slice
-│   ├── pages/
-│   │   ├── HomePage.tsx            # Feed, trending, search & category filters
-│   │   ├── PostDetailPage.tsx      # Article reader, comments, reactions, AI tools
-│   │   ├── StudioPage.tsx          # Article composer & AI editorial tools
-│   │   ├── SeriesPage.tsx          # Series directory & creation
-│   │   ├── AnalyticsPage.tsx       # Creator analytics, monetization & ad campaigns
-│   │   ├── BookmarksPage.tsx       # Saved articles
-│   │   └── NotFoundPage.tsx        # 404 fallback page
-│   ├── types/                      # TypeScript interfaces (posts, series, ads, auth, comments, etc.)
-│   ├── utils/                      # Shared utilities & option constants
-│   ├── App.tsx                     # Application routes & layout shell
-│   ├── index.css                   # Global styles & Tailwind entry
-│   └── main.tsx                    # React root mount
-├── .env.example                    # Environment variable template
-├── index.html                      # HTML entry & Google Fonts
-├── package.json
-├── tsconfig.json
-└── vite.config.ts                  # Vite config, `@` alias, and `/api` + `/uploads` proxy
+│   │   ├── api/                   # buzzboardApi.ts (RTK Query + resilient fallback)
+│   │   └── auth/                  # authSlice.ts (JWT & user persistence)
+│   ├── pages/                     # HomePage, AuthPage, OAuthCallbackPage, StudioPage,
+│   │                              # SeriesPage, AnalyticsPage, BookmarksPage, ProfilePage, PostDetailPage
+│   ├── types/                     # TypeScript domain interfaces
+│   └── utils/                     # cn, formatDate, formatNumber, resolveMediaUrl, AllOptions
+├── vercel.json                    # SPA rewrite rules for client-side routing
+├── vite.config.ts                 # Vite config & dev proxy (/api, /uploads -> :5000)
+└── package.json
 ```
 
 ---
@@ -75,60 +68,53 @@ BuzzBoard-Client/
 ## Getting Started
 
 ### Prerequisites
-- **Node.js** (v18+ recommended)
-- **npm** (or compatible package manager)
-- *(Optional)* BuzzBoard backend server running on `http://localhost:5000` for live persistence
+- Node.js `v18+` (recommended `v20+`)
+- npm
 
-### Installation
+### Local Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd BuzzBoard-Client
-   ```
-
-2. **Install dependencies**
+1. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Configure environment variables**
-   Copy `.env.example` to `.env` if you need to override the default API URL:
+2. **Configure environment variables**
    ```bash
    cp .env.example .env
    ```
-   `.env.example`:
+   `.env`:
    ```env
-   # Optional: Override API base URL in production (defaults to /api/v1 via Vite proxy in dev)
+   # Dev uses Vite proxy (/api -> http://localhost:5000); set full URL in production
    VITE_API_URL=/api/v1
    ```
 
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    npm run dev
    ```
-   The app will be available at `http://localhost:3000`. In development, Vite proxies `/api` and `/uploads` requests to `http://localhost:5000` (configured in `vite.config.ts`).
+   App runs at `http://localhost:3000`.
 
----
-
-## Available Scripts
+### Scripts
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Starts the Vite development server on port `3000` |
-| `npm run build` | Runs TypeScript type-checking (`tsc --noEmit`) and builds the production bundle |
-| `npm run preview` | Locally previews the production build |
+| `npm run dev` | Start Vite dev server on port `3000` |
+| `npm run build` | Run `tsc --noEmit` and build production bundle into `dist/` |
+| `npm run preview` | Preview the production build locally |
 
 ---
 
 ## Routes
 
-| Path | Page | Description |
+| Path | Page | Access |
 | :--- | :--- | :--- |
-| `/` | `HomePage` | Main feed, trending posts, search & category filters |
-| `/posts/:id` | `PostDetailPage` | Article details, comments, reactions & AI reader tools |
-| `/studio` | `StudioPage` | Editorial composer with AI writing, SEO & moderation tools |
-| `/series` | `SeriesPage` | Browse and create multi-part series |
-| `/analytics` | `AnalyticsPage` | Creator analytics, monetization & ad campaign management |
-| `/bookmarks` | `BookmarksPage` | Bookmarked articles list |
-| `*` | `NotFoundPage` | 404 Not Found page |
+| `/` | `HomePage` | Public |
+| `/login` | `AuthPage` (Sign In) | Public |
+| `/register` | `AuthPage` (Create Account + Google OAuth) | Public |
+| `/auth/callback` | `OAuthCallbackPage` | Public |
+| `/posts/:id` | `PostDetailPage` | Public (interactive actions require auth) |
+| `/series` | `SeriesPage` | Public (creating series requires auth) |
+| `/studio` | `StudioPage` | Auth-gated |
+| `/analytics` | `AnalyticsPage` | Auth-gated |
+| `/bookmarks` | `BookmarksPage` | Auth-gated |
+| `/profile` | `ProfilePage` | Auth-gated |
