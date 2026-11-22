@@ -1,16 +1,16 @@
 import type { User } from "./authTypes";
 
 export type PostCategory =
-  | "Technology"
+  | "Food"
   | "Health"
+  | "Other"
+  | "Travel"
+  | "Sports"
+  | "Business"
+  | "Technology"
   | "Lifestyle"
   | "Education"
-  | "Entertainment"
-  | "Business"
-  | "Travel"
-  | "Food"
-  | "Sports"
-  | "Other";
+  | "Entertainment";
 
 export interface PostReactions {
   love: number;

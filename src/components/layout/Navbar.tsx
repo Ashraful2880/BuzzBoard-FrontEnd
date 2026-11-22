@@ -74,7 +74,7 @@ export const Navbar: React.FC = () => {
     { path: "/series", label: "Series", icon: <Layers className="w-4 h-4" /> },
     {
       path: "/studio",
-      label: "Editorial Studio",
+      label: "Write Article",
       icon: <Edit3 className="w-4 h-4" />,
     },
     {
@@ -155,7 +155,7 @@ export const Navbar: React.FC = () => {
             {user && token ? (
               <>
                 {/* Notification Bell */}
-                <div ref={notifRef} className="relative">
+                <div ref={notifRef} className="sm:relative">
                   <button
                     type="button"
                     title="Notifications"
@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
                         initial={{ opacity: 0, y: 8, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                        className="absolute right-0 sm:mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 rounded-lg surface-3d-elevated p-4 z-50"
+                        className="absolute left-3 right-3 top-14 sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96 rounded-xl surface-3d-elevated p-4 z-50 shadow-lg"
                       >
                         <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
                           <div>
@@ -200,7 +200,7 @@ export const Navbar: React.FC = () => {
                           )}
                         </div>
 
-                        <div className="space-y-2 max-h-72 overflow-y-auto">
+                        <div className="space-y-2 max-h-[65vh] sm:max-h-72 overflow-y-auto">
                           {notifications.length === 0 ? (
                             <p className="text-xs text-slate-400 py-6 text-center">
                               No notifications yet

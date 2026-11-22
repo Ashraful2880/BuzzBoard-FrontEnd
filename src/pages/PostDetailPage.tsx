@@ -447,7 +447,7 @@ export const PostDetailPage: React.FC = () => {
             value={question}
             containerClassName="flex-1"
             onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Ask question related to this article"
+            placeholder="Ask Question Related to This Article"
           />
           <CustomButton
             type="submit"
@@ -477,7 +477,7 @@ export const PostDetailPage: React.FC = () => {
             rows={3}
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Share your thoughts or technical feedback..."
+            placeholder="Share Your Thoughts or Technical Feedback..."
           />
           <div className="flex justify-end">
             <CustomButton
@@ -530,7 +530,7 @@ export const PostDetailPage: React.FC = () => {
                   <div className="flex gap-2 pt-2">
                     <CustomInput
                       value={replyText}
-                      placeholder="Write a reply..."
+                      placeholder="Write a Reply..."
                       onChange={(e) => setReplyText(e.target.value)}
                     />
                     <CustomButton

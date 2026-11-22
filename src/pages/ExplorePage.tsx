@@ -175,9 +175,9 @@ export const ExplorePage: React.FC = () => {
                 value={searchInput}
                 label="Search Publications"
                 containerClassName="flex-1"
+                placeholder="Search Publications"
                 leftIcon={<Search className="w-4 h-4" />}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search Fastify, PostgreSQL, React, RTK Query..."
               />
               <CustomButton
                 type="submit"

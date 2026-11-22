@@ -3,7 +3,11 @@ export interface User {
   name: string;
   bio?: string;
   email: string;
+  token?: string;
   website?: string;
+  isVerified?: boolean;
+  followersCount?: number;
+  followingCount?: number;
   role: "user" | "author" | "admin";
   profile_img?: {
     url: string;
@@ -14,10 +18,6 @@ export interface User {
     twitter?: string;
     linkedin?: string;
   };
-  token?: string;
-  isVerified?: boolean;
-  followersCount?: number;
-  followingCount?: number;
 }
 
 export interface AuthState {

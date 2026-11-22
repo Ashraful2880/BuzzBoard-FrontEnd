@@ -16,13 +16,13 @@ export const PostCard: React.FC<
 > = ({
   post,
   onOpen,
+  onLike,
   index = 0,
   onBookmark,
-  isBookmarked = false,
-  isBookmarking = false,
   isLiked = false,
   isLiking = false,
-  onLike,
+  isBookmarked = false,
+  isBookmarking = false,
 }) => {
   return (
     <motion.div
@@ -33,7 +33,7 @@ export const PostCard: React.FC<
     >
       <TiltCard3D
         intensity={8}
-        className="h-full p-5 sm:p-6"
+        className="h-full px-4 py-3 sm:p-6"
         onClick={() => onOpen(post.slug || post._id)}
       >
         <div className="h-full flex flex-col justify-between gap-4">
@@ -86,7 +86,7 @@ export const PostCard: React.FC<
             </div>
           </div>
 
-          <div className="pt-3 mt-auto border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="sm:pt-3 mt-auto border-t border-slate-100 flex flex-wrap items-center justify-center sm:justify-between gap-1 sm:gap-3">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900 text-white font-display font-bold text-sm flex items-center justify-center">
                 {post.author?.name?.charAt(0) || "A"}

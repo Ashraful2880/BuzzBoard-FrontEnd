@@ -12,7 +12,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   className,
   helperText,
   searchable = false,
-  placeholder = "Select an option",
+  placeholder = "Select an Option",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -104,7 +104,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 <input
                   type="text"
                   value={searchQuery}
-                  placeholder="Filter options..."
+                  placeholder="Filter Options..."
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full h-8 pl-8 pr-3 rounded-lg bg-slate-50 text-xs text-slate-800 placeholder:text-slate-400 border border-slate-200 focus:outline-none focus:border-blue-500"
                 />

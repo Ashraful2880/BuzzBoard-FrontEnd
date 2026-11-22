@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from "react";
 import { HomePage } from "@/pages/HomePage";
+import React, { Suspense, lazy } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SkeletonLoader } from "@/components/shared";

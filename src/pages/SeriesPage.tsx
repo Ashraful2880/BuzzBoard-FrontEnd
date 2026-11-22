@@ -140,7 +140,7 @@ export const SeriesPage: React.FC = () => {
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="What will readers learn across this series?"
+            placeholder="What Will Readers Learn Across This Series?"
           />
 
           <CustomButton

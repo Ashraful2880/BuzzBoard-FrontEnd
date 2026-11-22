@@ -25,9 +25,9 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   label,
   value,
   onChange,
-  placeholder = "Schedule date & time (Optional)",
-  helperText,
   className,
+  helperText,
+  placeholder = "Schedule Date & Time (Optional)",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -150,11 +150,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         {value && (
           <button
             type="button"
+            title="Clear date"
             onClick={(e) => {
               e.stopPropagation();
               onChange("");
             }}
-            title="Clear date"
             className="absolute right-2.5 p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-slate-100 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
@@ -165,10 +165,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            transition={{ duration: 0.16 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
-            transition={{ duration: 0.16 }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
             className="absolute z-50 left-0 mt-1.5 w-80 max-w-[calc(100vw-2rem)] rounded-lg surface-3d-elevated p-4"
           >
             <div className="flex items-center gap-1.5 mb-3 pb-2.5 border-b border-slate-100">

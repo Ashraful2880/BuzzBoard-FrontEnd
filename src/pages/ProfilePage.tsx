@@ -313,7 +313,7 @@ export const ProfilePage: React.FC = () => {
                   required
                   value={name}
                   label="Full Name"
-                  placeholder="Md Ashraful Islam"
+                  placeholder="Enter Your Full Name"
                   onChange={(e) => setName(e.target.value)}
                   leftIcon={<UserIcon className="w-4 h-4" />}
                 />
@@ -323,9 +323,9 @@ export const ProfilePage: React.FC = () => {
                   type="email"
                   value={email}
                   label="Email Address"
-                  placeholder="you@company.com"
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter Your Email Address"
                   leftIcon={<Mail className="w-4 h-4" />}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
@@ -333,36 +333,36 @@ export const ProfilePage: React.FC = () => {
                 rows={3}
                 value={bio}
                 label="Author Bio"
-                placeholder="Write a short bio about your engineering focus and background..."
                 onChange={(e) => setBio(e.target.value)}
+                placeholder="Write a Short Bio About Your Engineering Focus & Background..."
               />
 
               <CustomInput
                 type="url"
                 value={website}
                 label="Website / Portfolio URL"
-                placeholder="https://yourportfolio.com"
-                onChange={(e) => setWebsite(e.target.value)}
+                placeholder="Enter Your Website URL"
                 leftIcon={<Globe className="w-4 h-4" />}
+                onChange={(e) => setWebsite(e.target.value)}
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <CustomInput
                   value={github}
                   label="GitHub URL"
-                  placeholder="https://github.com/username"
+                  placeholder="Enter Your GitHub URL"
                   onChange={(e) => setGithub(e.target.value)}
                 />
                 <CustomInput
                   value={linkedin}
                   label="LinkedIn URL"
-                  placeholder="https://linkedin.com/in/username"
+                  placeholder="Enter Your LinkedIn URL"
                   onChange={(e) => setLinkedin(e.target.value)}
                 />
                 <CustomInput
                   value={twitter}
                   label="X / Twitter URL"
-                  placeholder="https://x.com/username"
+                  placeholder="Enter Your X / Twitter URL"
                   onChange={(e) => setTwitter(e.target.value)}
                 />
               </div>
@@ -372,9 +372,9 @@ export const ProfilePage: React.FC = () => {
                   type="password"
                   value={newPassword}
                   label="New Password (Optional)"
-                  placeholder="Leave blank to keep current password"
                   leftIcon={<Lock className="w-4 h-4" />}
                   onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Leave blank to keep current password"
                 />
               </div>
 

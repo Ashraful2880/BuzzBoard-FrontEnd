@@ -329,7 +329,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                         required
                         value={name}
                         label="Full Name"
-                        placeholder="Md Ashraful Islam"
+                        placeholder="Enter Your Full Name"
                         onChange={(e) => setName(e.target.value)}
                         leftIcon={<UserIcon className="w-4 h-4" />}
                       />
@@ -340,7 +340,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       type="email"
                       value={email}
                       label="Email"
-                      placeholder="you@company.com"
+                      placeholder="Enter Your Email"
                       leftIcon={<Mail className="w-4 h-4" />}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -351,7 +351,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                           required
                           label="Password"
                           value={password}
-                          placeholder="Password"
+                          placeholder="Enter Password"
                           leftIcon={<Lock className="w-4 h-4" />}
                           type={showPassword ? "text" : "password"}
                           onChange={(e) => setPassword(e.target.value)}

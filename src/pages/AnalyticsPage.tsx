@@ -238,8 +238,8 @@ export const AnalyticsPage: React.FC = () => {
             required
             value={title}
             label="Campaign Headline"
+            placeholder="Enter Headline"
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Deploy Fastify APIs in 60 Seconds"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -247,13 +247,13 @@ export const AnalyticsPage: React.FC = () => {
               required
               value={sponsorName}
               label="Sponsor / Brand"
-              placeholder="Madmind Digitals"
+              placeholder="Enter Brand Name"
               onChange={(e) => setSponsorName(e.target.value)}
             />
             <CustomInput
               type="number"
               value={budget}
-              label="Budget (USD)"
+              label="Enter Budget"
               onChange={(e) => setBudget(e.target.value)}
             />
           </div>
@@ -262,7 +262,7 @@ export const AnalyticsPage: React.FC = () => {
             required
             value={targetUrl}
             label="Destination URL"
-            placeholder="https://byshelp.com"
+            placeholder="Enter URL"
             onChange={(e) => setTargetUrl(e.target.value)}
           />
 
@@ -284,7 +284,7 @@ export const AnalyticsPage: React.FC = () => {
             label="Campaign End Date (Optional)"
           />
 
-          <div className="flex justify-end w-full">
+          <div className="flex justify-center sm:justify-end w-full">
             <div className="inline-flex justify-end">
               <CustomButton
                 fullWidth

@@ -71,7 +71,7 @@ export const BookmarksPage: React.FC = () => {
                   </span>
                   <span className="text-xs font-mono text-slate-500 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    {post.readingTime} min
+                    {post.readingTime} Min
                   </span>
                 </div>
 

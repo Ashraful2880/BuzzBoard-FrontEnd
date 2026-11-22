@@ -33,7 +33,10 @@ export function resolveMediaUrl(url?: string): string {
     return url;
   }
   const apiUrl = import.meta.env.VITE_API_URL;
-  if (apiUrl && (apiUrl.startsWith("http://") || apiUrl.startsWith("https://"))) {
+  if (
+    apiUrl &&
+    (apiUrl.startsWith("http://") || apiUrl.startsWith("https://"))
+  ) {
     try {
       const origin = new URL(apiUrl).origin;
       return `${origin}${url.startsWith("/") ? url : `/${url}`}`;

@@ -12,12 +12,12 @@ export interface TiltCard3DProps {
 }
 
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "outline"
   | "ghost"
   | "danger"
-  | "emerald";
+  | "primary"
+  | "outline"
+  | "emerald"
+  | "secondary";
 
 export type ButtonSize = "sm" | "md" | "lg";
 

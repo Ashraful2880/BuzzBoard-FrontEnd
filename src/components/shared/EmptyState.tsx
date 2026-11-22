@@ -23,7 +23,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     >
       <TiltCard3D
         intensity={4}
-        className="p-6 sm:p-14 text-center flex flex-col items-center justify-center space-y-5 bg-architectural-grid"
+        className="p-4 sm:p-14 text-center flex flex-col items-center justify-center space-y-5 bg-architectural-grid"
       >
         <div className="max-w-md space-y-2">
           <h3 className="text-xl font-display font-bold text-slate-900">
@@ -35,7 +35,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         </div>
 
         {(actionLabel || secondaryLabel) && (
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-4 sm:pt-2">
             {actionLabel && onAction && (
               <CustomButton variant="primary" size="md" onClick={onAction}>
                 {actionLabel}

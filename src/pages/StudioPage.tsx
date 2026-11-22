@@ -237,21 +237,21 @@ export const StudioPage: React.FC = () => {
             maxLength={50000}
             label="Article Content (Markdown Supported)"
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your article here, or use the Writing Assistant on the right to draft an outline..."
+            placeholder="Write Your Article Here, or Use The Writing Assistant On The Right to Draft an Outline..."
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CustomInput
               value={tags}
+              placeholder="Enter Tags..."
               label="Tags (Comma Separated)"
               onChange={(e) => setTags(e.target.value)}
-              placeholder="react, typescript, postgresql, prisma"
             />
             <CustomDatePicker
               value={scheduledAt}
               onChange={setScheduledAt}
               label="Schedule Publish Date (Optional)"
-              helperText="Leave empty to publish immediately"
+              helperText="Leave Empty to Publish Immediately"
             />
           </div>
 

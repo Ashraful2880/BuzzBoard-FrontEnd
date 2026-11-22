@@ -285,8 +285,8 @@ export const HomePage: React.FC = () => {
                           {tp.title}
                         </h4>
                         <p className="text-[11px] text-slate-500">
-                          {formatNumber(tp.views)} views • {tp.readingTime}m
-                          read
+                          {formatNumber(tp.views)} Views • {tp.readingTime}m
+                          Read
                         </p>
                       </div>
                     </div>
@@ -308,7 +308,7 @@ export const HomePage: React.FC = () => {
                       className="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0"
                     />
                   ) : (
-                    <div className="w-11 h-11 rounded-xl bg-slate-900 text-white font-display font-bold text-base flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 sm:h-10 sm:w-10 rounded-full bg-slate-900 text-white font-display font-bold text-sm sm:text-base flex items-center justify-center shrink-0">
                       {authorInitials || "BB"}
                     </div>
                   )}
@@ -354,7 +354,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         {posts.length > 0 && (
-          <div className="pt-2 flex justify-center">
+          <div className="sm:pt-2 flex justify-center">
             <CustomButton
               size="lg"
               variant="secondary"

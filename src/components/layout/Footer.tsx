@@ -35,9 +35,9 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="mt-4 sm:mt-6 border-t border-slate-200 bg-white">
-      <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto py-8 space-y-5">
+      <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto py-4 sm:py-8 space-y-5">
         {/* Newsletter Strip */}
-        <div className="rounded-xl bg-[#FAF9F7] border border-slate-200 p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div className="rounded-md bg-[#FAF9F7] border border-slate-200 p-3 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
           <div className="max-w-xl space-y-1.5">
             <span className="inline-block text-[13px]  text-orange-700 font-semibold">
               Weekly Engineering Digest
@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
                   required
                   type="email"
                   value={email}
-                  placeholder="you@company.com"
+                  placeholder="Enter Your Email"
                   containerClassName="sm:w-72"
                   leftIcon={<Mail className="w-4 h-4" />}
                   onChange={(e) => setEmail(e.target.value)}
@@ -84,9 +84,9 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* 4-Column Professional Editorial Footer */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-5 border-b border-slate-200 pt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-8 pb-5 border-b border-slate-200 pt-0.5 sm:pt-5">
           {/* Brand Column */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-2 sm:space-y-4 text-center sm:text-start">
             <Link to="/" className="inline-flex items-center gap-2.5">
               <img
                 src="/logo.png"
@@ -104,7 +104,7 @@ export const Footer: React.FC = () => {
               series, bilingual reading, and transparent sponsorship analytics.
             </p>
 
-            <div className="flex items-center gap-2.5 pt-1">
+            <div className="flex justify-center sm:justify-start items-center gap-2.5 pt-1">
               <a
                 title="GitHub"
                 target="_blank"
@@ -136,7 +136,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Platform Links */}
-          <div className="lg:col-span-2 space-y-3">
+          <div className="lg:col-span-2 space-y-2 sm:space-y-3 text-center">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900">
               Platform
             </h4>
@@ -177,7 +177,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Monetization & SEO */}
-          <div className="lg:col-span-2 space-y-3">
+          <div className="lg:col-span-2 space-y-2 sm:space-y-3 text-center sm:text-start">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900">
               Growth &amp; Ads
             </h4>
@@ -216,7 +216,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Developer & Stack */}
-          <div className="lg:col-span-3 space-y-3">
+          <div className="lg:col-span-3 space-y-2 sm:space-y-3 text-center sm:text-start">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900">
               Developers
             </h4>
@@ -242,10 +242,6 @@ export const Footer: React.FC = () => {
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span>API System Status</span>
                 </a>
-              </li>
-              <li className="text-slate-500 pt-1">
-                Powered by React 19, TypeScript, RTK Query, PostgreSQL &amp;
-                Prisma ORM.
               </li>
             </ul>
           </div>
