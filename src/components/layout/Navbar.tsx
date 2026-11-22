@@ -1,5 +1,6 @@
 import {
   Bell,
+  Home,
   Edit3,
   Layers,
   LogOut,
@@ -14,12 +15,12 @@ import {
   useGetNotificationsQuery,
   useMarkAllNotificationsReadMutation,
 } from "@/features/api/buzzboardApi";
-import { cn, formatDate, resolveMediaUrl } from "@/utils/cn";
 import { logout } from "@/features/auth/authSlice";
-import { CustomButton, ConfirmModal } from "@/components/shared";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useRef, useEffect } from "react";
+import { cn, formatDate, resolveMediaUrl } from "@/utils/cn";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { CustomButton, ConfirmModal } from "@/components/shared";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Navbar: React.FC = () => {
@@ -28,10 +29,10 @@ export const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user, token } = useAppSelector((state) => state.auth);
 
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [avatarError, setAvatarError] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
     setAvatarError(false);
@@ -64,7 +65,12 @@ export const Navbar: React.FC = () => {
   const notifications = token ? notifData?.data || [] : [];
 
   const navLinks = [
-    { path: "/", label: "Explore", icon: <Compass className="w-4 h-4" /> },
+    { path: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
+    {
+      path: "/explore",
+      label: "Explore",
+      icon: <Compass className="w-4 h-4" />,
+    },
     { path: "/series", label: "Series", icon: <Layers className="w-4 h-4" /> },
     {
       path: "/studio",
@@ -105,7 +111,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-transparent p-1 rounded-lg">
+          <nav className="hidden lg:flex items-center gap-1 bg-slate-100/80 border border-slate-200/70 p-1 rounded-full">
             {navLinks.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -113,7 +119,7 @@ export const Navbar: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    "relative px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-colors",
+                    "relative px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 transition-colors",
                     isActive
                       ? "text-slate-950"
                       : "text-slate-600 hover:text-slate-950",
@@ -124,13 +130,20 @@ export const Navbar: React.FC = () => {
                       layoutId="activeNavPill"
                       transition={{
                         type: "spring",
-                        stiffness: 380,
-                        damping: 30,
+                        stiffness: 420,
+                        damping: 32,
                       }}
-                      className="absolute inset-0 border-b-2 border-orange-400"
+                      className="absolute inset-0 rounded-full bg-white border border-orange-200/80 shadow-2xs"
                     />
                   )}
-                  <span className="relative z-10">{item.icon}</span>
+                  <span
+                    className={cn(
+                      "relative z-10 transition-colors",
+                      isActive ? "text-orange-600" : "text-slate-400",
+                    )}
+                  >
+                    {item.icon}
+                  </span>
                   <span className="relative z-10">{item.label}</span>
                 </Link>
               );
@@ -147,7 +160,7 @@ export const Navbar: React.FC = () => {
                     type="button"
                     title="Notifications"
                     onClick={() => setNotifOpen((prev) => !prev)}
-                    className="relative w-7 sm:w-10 h-7 sm:h-10 rounded-full sm:border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition-colors cursor-pointer shadow-xs"
+                    className="relative w-8 h-8 rounded-full sm:border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:border-slate-300 transition-colors cursor-pointer shadow-xs"
                   >
                     <Bell className="w-4 h-4" />
                     {unreadCount > 0 && (
@@ -241,9 +254,9 @@ export const Navbar: React.FC = () => {
                   >
                     {user.profile_img?.url && !avatarError ? (
                       <img
-                        src={resolveMediaUrl(user.profile_img.url)}
                         alt={user.name}
                         onError={() => setAvatarError(true)}
+                        src={resolveMediaUrl(user.profile_img.url)}
                         className="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0"
                       />
                     ) : (
@@ -263,8 +276,8 @@ export const Navbar: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => setLogoutModalOpen(true)}
                     title="Sign out"
+                    onClick={() => setLogoutModalOpen(true)}
                     className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 flex items-center justify-center transition-colors cursor-pointer"
                   >
                     <LogOut className="w-4 h-4" />
@@ -276,8 +289,8 @@ export const Navbar: React.FC = () => {
                 <CustomButton
                   size="sm"
                   variant="secondary"
-                  leftIcon={<UserIcon className="w-3.5 h-3.5" />}
                   onClick={() => navigate("/login")}
+                  leftIcon={<UserIcon className="w-3.5 h-3.5" />}
                 >
                   Sign In
                 </CustomButton>
@@ -299,8 +312,8 @@ export const Navbar: React.FC = () => {
             const isActive = location.pathname === item.path;
             return (
               <Link
-                key={item.path}
                 to={item.path}
+                key={item.path}
                 className={cn(
                   "flex flex-col items-center gap-1 px-1 sm:px-3 py-1 rounded-lg text-[10px] sm:text-[11px] font-medium whitespace-nowrap shrink-0",
                   isActive ? "text-orange-600" : "text-slate-500",

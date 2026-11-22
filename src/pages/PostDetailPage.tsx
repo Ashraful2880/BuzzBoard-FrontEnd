@@ -15,7 +15,6 @@ import {
   CornerDownRight,
 } from "lucide-react";
 import {
-  TiltCard3D,
   EmptyState,
   CustomInput,
   CustomButton,
@@ -55,9 +54,9 @@ export const PostDetailPage: React.FC = () => {
     useAskPostQuestionMutation();
   const [translatePost, { data: translateRes, isLoading: isTranslating }] =
     useTranslatePostMutation();
-  const [likePost] = useLikePostMutation();
+  const [likePost, { isLoading: isLiking }] = useLikePostMutation();
   const [reactToPost] = useReactToPostMutation();
-  const [toggleBookmark] = useToggleBookmarkMutation();
+  const [toggleBookmark, { isLoading: isSaving }] = useToggleBookmarkMutation();
 
   const { data: commentsRes } = useGetPostCommentsQuery(post?._id || "", {
     skip: !post?._id,
@@ -71,6 +70,20 @@ export const PostDetailPage: React.FC = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [isBanglaView, setIsBanglaView] = useState(false);
   const [replyToId, setReplyToId] = useState<string | null>(null);
+  const [activeReaction, setActiveReaction] = useState<
+    "love" | "fire" | "insightful" | "clap" | null
+  >(null);
+  const [reactedSet, setReactedSet] = useState<Set<string>>(new Set());
+  const [isLikedState, setIsLikedState] = useState<boolean | null>(null);
+  const [isSavedState, setIsSavedState] = useState<boolean | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+
+  const showFeedback = (msg: string) => {
+    setActionFeedback(msg);
+    setTimeout(() => {
+      setActionFeedback((prev) => (prev === msg ? null : prev));
+    }, 2200);
+  };
 
   if (isLoading) {
     return <SkeletonLoader variant="detail" />;
@@ -119,11 +132,52 @@ export const PostDetailPage: React.FC = () => {
     await askQuestion({ postId: post._id, question: question.trim() });
   };
 
+  const handleLike = async () => {
+    if (!requireAuth()) return;
+    try {
+      const res = await likePost(post._id).unwrap();
+      const liked = res?.data?.hasLiked;
+      if (typeof liked === "boolean") {
+        setIsLikedState(liked);
+        showFeedback(liked ? "Liked article!" : "Removed like");
+      } else {
+        showFeedback("Updated like");
+      }
+    } catch {
+      showFeedback("Could not update like");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!requireAuth()) return;
+    try {
+      const res = await toggleBookmark(post._id).unwrap();
+      const saved = res?.data?.isBookmarked;
+      if (typeof saved === "boolean") {
+        setIsSavedState(saved);
+        showFeedback(saved ? "Saved to Reading List" : "Removed from Reading List");
+      } else {
+        showFeedback("Updated Reading List");
+      }
+    } catch {
+      showFeedback("Could not update Reading List");
+    }
+  };
+
   const handleReaction = async (
     type: "love" | "fire" | "insightful" | "clap",
   ) => {
-    if (!requireAuth()) return;
-    await reactToPost({ postId: post._id, type, count: 1 });
+    if (!requireAuth() || activeReaction) return;
+    setActiveReaction(type);
+    try {
+      await reactToPost({ postId: post._id, type, count: 1 }).unwrap();
+      setReactedSet((prev) => new Set(prev).add(type));
+      showFeedback(`Reacted with ${type}!`);
+    } catch {
+      showFeedback("Could not add reaction");
+    } finally {
+      setActiveReaction(null);
+    }
   };
 
   const handlePostComment = async (e: React.FormEvent) => {
@@ -234,22 +288,50 @@ export const PostDetailPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <AnimatePresence>
+              {actionFeedback && (
+                <motion.span
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 8 }}
+                  className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-semibold text-emerald-700"
+                >
+                  {actionFeedback}
+                </motion.span>
+              )}
+            </AnimatePresence>
             <CustomButton
               size="sm"
-              variant="secondary"
+              isLoading={isLiking}
+              variant={isLikedState ? "primary" : "secondary"}
               badge={post.likesCount}
-              onClick={() => requireAuth() && likePost(post._id)}
-              leftIcon={<Heart className="w-3.5 h-3.5 text-rose-500" />}
+              onClick={handleLike}
+              leftIcon={
+                <Heart
+                  className={`w-3.5 h-3.5 ${
+                    isLikedState
+                      ? "fill-rose-500 text-rose-500"
+                      : "text-rose-500"
+                  }`}
+                />
+              }
             >
-              Like
+              {isLikedState ? "Liked" : "Like"}
             </CustomButton>
             <CustomButton
               size="sm"
-              variant="outline"
-              leftIcon={<Bookmark className="w-3.5 h-3.5" />}
-              onClick={() => requireAuth() && toggleBookmark(post._id)}
+              isLoading={isSaving}
+              variant={isSavedState ? "emerald" : "outline"}
+              onClick={handleSave}
+              leftIcon={
+                <Bookmark
+                  className={`w-3.5 h-3.5 ${
+                    isSavedState ? "fill-current" : ""
+                  }`}
+                />
+              }
             >
-              Save
+              {isSavedState ? "Saved" : "Save"}
             </CustomButton>
           </div>
         </div>
@@ -281,49 +363,68 @@ export const PostDetailPage: React.FC = () => {
           {displayedContent}
         </div>
 
-        <div className="pt-2 flex flex-wrap items-center gap-2">
-          <CustomButton
-            size="sm"
-            variant="secondary"
-            badge={post.reactions?.clap || 0}
-            onClick={() => handleReaction("clap")}
-            leftIcon={<HandMetal className="w-3.5 h-3.5 text-slate-700" />}
-          >
-            Clap
-          </CustomButton>
-          <CustomButton
-            size="sm"
-            variant="secondary"
-            badge={post.reactions?.fire || 0}
-            onClick={() => handleReaction("fire")}
-            leftIcon={<Flame className="w-3.5 h-3.5 text-orange-500" />}
-          >
-            Fire
-          </CustomButton>
-          <CustomButton
-            size="sm"
-            variant="secondary"
-            badge={post.reactions?.insightful || 0}
-            onClick={() => handleReaction("insightful")}
-            leftIcon={<Lightbulb className="w-3.5 h-3.5 text-amber-500" />}
-          >
-            Insightful
-          </CustomButton>
-          <CustomButton
-            size="sm"
-            variant="secondary"
-            badge={post.reactions?.love || 0}
-            onClick={() => handleReaction("love")}
-            leftIcon={<Heart className="w-3.5 h-3.5 text-rose-500" />}
-          >
-            Love
-          </CustomButton>
+        <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <CustomButton
+              size="sm"
+              isLoading={activeReaction === "clap"}
+              variant={reactedSet.has("clap") ? "primary" : "secondary"}
+              badge={post.reactions?.clap || 0}
+              onClick={() => handleReaction("clap")}
+              leftIcon={<HandMetal className="w-3.5 h-3.5" />}
+            >
+              Clap
+            </CustomButton>
+            <CustomButton
+              size="sm"
+              isLoading={activeReaction === "fire"}
+              variant={reactedSet.has("fire") ? "primary" : "secondary"}
+              badge={post.reactions?.fire || 0}
+              onClick={() => handleReaction("fire")}
+              leftIcon={<Flame className="w-3.5 h-3.5 text-orange-500" />}
+            >
+              Fire
+            </CustomButton>
+            <CustomButton
+              size="sm"
+              isLoading={activeReaction === "insightful"}
+              variant={reactedSet.has("insightful") ? "primary" : "secondary"}
+              badge={post.reactions?.insightful || 0}
+              onClick={() => handleReaction("insightful")}
+              leftIcon={<Lightbulb className="w-3.5 h-3.5 text-amber-500" />}
+            >
+              Insightful
+            </CustomButton>
+            <CustomButton
+              size="sm"
+              isLoading={activeReaction === "love"}
+              variant={reactedSet.has("love") ? "primary" : "secondary"}
+              badge={post.reactions?.love || 0}
+              onClick={() => handleReaction("love")}
+              leftIcon={<Heart className="w-3.5 h-3.5 text-rose-500" />}
+            >
+              Love
+            </CustomButton>
+          </div>
+
+          <AnimatePresence>
+            {actionFeedback && (
+              <motion.span
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700"
+              >
+                {actionFeedback}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
       </article>
 
       <AdBannerSlot placement="in_article" category={post.category} />
 
-      <div className="p-6 sm:px-4 sm:py-4 space-y-4">
+      <div className="space-y-2">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600">
             <Bot className="w-5 h-5" />
@@ -340,7 +441,7 @@ export const PostDetailPage: React.FC = () => {
 
         <form
           onSubmit={handleAskAI}
-          className="flex flex-col sm:flex-row gap-3 mt-4"
+          className="flex flex-col sm:flex-row gap-3 mt-3"
         >
           <CustomInput
             value={question}

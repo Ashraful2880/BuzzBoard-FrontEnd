@@ -1,34 +1,22 @@
+import { cn } from "@/utils/cn";
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, X } from "lucide-react";
+import { ConfirmModalProps } from "@/types";
 import { CustomButton } from "./CustomButton";
-import { cn } from "@/utils/cn";
-
-export interface ConfirmModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  description?: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  variant?: "danger" | "primary";
-  isLoading?: boolean;
-  icon?: React.ReactNode;
-}
+import { AlertTriangle, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  icon,
+  title,
   isOpen,
   onClose,
   onConfirm,
-  title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
-  variant = "danger",
   isLoading = false,
-  icon,
+  variant = "danger",
+  cancelLabel = "Cancel",
+  confirmLabel = "Confirm",
 }) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -49,17 +37,17 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           onClick={() => !isLoading && onClose()}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ duration: 0.16, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
             className="relative w-full max-w-md rounded-2xl surface-3d-elevated p-6 space-y-5 shadow-xl"
           >
             <button
               type="button"
-              disabled={isLoading}
               onClick={onClose}
+              disabled={isLoading}
               aria-label="Close modal"
               className="absolute right-4 top-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer disabled:opacity-50"
             >
@@ -94,17 +82,17 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               <CustomButton
                 size="sm"
                 type="button"
+                onClick={onClose}
                 variant="secondary"
                 disabled={isLoading}
-                onClick={onClose}
               >
                 {cancelLabel}
               </CustomButton>
               <CustomButton
                 size="sm"
                 type="button"
-                isLoading={isLoading}
                 onClick={onConfirm}
+                isLoading={isLoading}
                 variant={variant === "danger" ? "danger" : "primary"}
               >
                 {confirmLabel}

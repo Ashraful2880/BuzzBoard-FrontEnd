@@ -1,4 +1,5 @@
 import type React from "react";
+import { Post } from "./postTypes";
 import type { HTMLMotionProps } from "framer-motion";
 
 export interface TiltCard3DProps {
@@ -125,4 +126,32 @@ export interface SectionHeaderProps {
   description?: string;
   align?: "center" | "left";
   badgeIcon?: React.ReactNode;
+}
+
+export interface PostCardProps {
+  post: Post;
+  index?: number;
+  onOpen: (slugOrId: string) => void;
+  onBookmark: (postId: string) => void;
+}
+
+export interface PaginationProps {
+  totalPages: number;
+  className?: string;
+  isLoading?: boolean;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
+export interface ConfirmModalProps {
+  title: string;
+  isOpen: boolean;
+  onClose: () => void;
+  isLoading?: boolean;
+  description?: string;
+  cancelLabel?: string;
+  onConfirm: () => void;
+  confirmLabel?: string;
+  icon?: React.ReactNode;
+  variant?: "danger" | "primary";
 }

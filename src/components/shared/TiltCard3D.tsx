@@ -57,7 +57,7 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
   const glareBackground = useMotionTemplate`radial-gradient(420px circle at ${mouseX}% ${mouseY}%, ${glareColor}, transparent 75%)`;
 
   return (
-    <div className="perspective-1000">
+    <div className="perspective-1000 h-full">
       <motion.div
         ref={ref}
         onClick={onClick}
@@ -90,7 +90,7 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
         <div
-          className="relative z-10"
+          className="relative z-10 h-full"
           style={{ transform: "translateZ(24px)" }}
         >
           {children}

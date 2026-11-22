@@ -56,7 +56,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "w-full h-10 px-3.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-2 text-sm text-left transition-all duration-150 cursor-pointer hover:border-slate-300",
+          "w-full h-10 px-3.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-2 text-[13px] text-left transition-all duration-150 cursor-pointer hover:border-slate-300",
           isOpen && "border-orange-500 ring-2 ring-orange-500/15",
         )}
       >
@@ -128,7 +128,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                       setSearchQuery("");
                     }}
                     className={cn(
-                      "w-full px-3 py-2.5 rounded-xl flex items-center justify-between gap-2 text-left text-sm transition-colors cursor-pointer",
+                      "w-full px-3 py-2.5 rounded-xl flex items-center justify-between gap-2 text-left text-[13px] transition-colors cursor-pointer",
                       isSelected
                         ? "bg-orange-50 text-orange-700 font-semibold"
                         : "text-slate-700 hover:bg-slate-100 hover:text-slate-950",

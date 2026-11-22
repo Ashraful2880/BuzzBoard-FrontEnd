@@ -1,10 +1,10 @@
 export interface User {
   _id: string;
   name: string;
-  email: string;
   bio?: string;
-  role: "user" | "author" | "admin";
+  email: string;
   website?: string;
+  role: "user" | "author" | "admin";
   profile_img?: {
     url: string;
     public_id: string;

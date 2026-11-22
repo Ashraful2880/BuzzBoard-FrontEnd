@@ -48,9 +48,9 @@ export const SeriesPage: React.FC = () => {
     <div className="container px-2 lg:px-4 md:px-4 xl:px-4 sm:px-6 mx-auto sm:space-y-5 space-y-3">
       <SectionHeader
         badge="Curriculum"
-        badgeIcon={<Layers className="w-3 h-3" />}
         title="Engineering"
         highlight="Series & Guides"
+        badgeIcon={<Layers className="w-3 h-3" />}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
@@ -69,7 +69,7 @@ export const SeriesPage: React.FC = () => {
                 <TiltCard3D
                   key={s._id}
                   intensity={5}
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/series/${s.slug || s._id}`)}
                   className="p-3 sm:p-6 flex flex-col justify-between gap-3 sm:gap-4"
                 >
                   <div className="space-y-2 sm:space-y-3">

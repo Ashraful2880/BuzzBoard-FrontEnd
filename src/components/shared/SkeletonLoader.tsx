@@ -20,7 +20,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     return (
       <div
         className={cn(
-          "max-w-4xl mx-auto px-4 sm:px-6 pt-6 space-y-8",
+          "container mx-auto px-4 sm:px-6 pt-6 space-y-8",
           className,
         )}
       >

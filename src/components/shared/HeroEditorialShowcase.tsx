@@ -96,35 +96,6 @@ export const HeroEditorialShowcase: React.FC = () => {
           </span>
         </div>
 
-        {/* Stage Selector Pills */}
-        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-slate-100/80 border border-slate-200/60">
-          {STAGES.map((stage, idx) => {
-            const isActive = idx === activeIdx;
-            return (
-              <button
-                key={stage.id}
-                type="button"
-                onClick={() => setActiveIdx(idx)}
-                className={cn(
-                  "relative py-1.5 px-1.5 sm:px-2 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-colors cursor-pointer truncate",
-                  isActive
-                    ? "text-slate-950"
-                    : "text-slate-500 hover:text-slate-800",
-                )}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="heroStagePill"
-                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                    className="absolute inset-0 rounded-lg bg-white border border-slate-200/80 shadow-2xs"
-                  />
-                )}
-                <span className="relative z-10">{stage.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Animated Stage Content */}
         <AnimatePresence mode="wait">
           <motion.div

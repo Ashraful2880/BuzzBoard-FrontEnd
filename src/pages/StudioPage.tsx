@@ -210,7 +210,7 @@ export const StudioPage: React.FC = () => {
             required
             value={title}
             label="Article Headline"
-            placeholder="Enter your headline..."
+            placeholder="Enter Your Headline..."
             onChange={(e) => setTitle(e.target.value)}
           />
 
@@ -319,8 +319,8 @@ export const StudioPage: React.FC = () => {
 
             <CustomButton
               fullWidth
-              variant="emerald"
               className="mt-4"
+              variant="emerald"
               isLoading={isAssisting}
               onClick={handleRunCoPilot}
               leftIcon={<Sparkles className="w-4 h-4" />}

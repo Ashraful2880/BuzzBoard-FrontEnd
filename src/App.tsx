@@ -8,11 +8,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 const AuthPage = lazy(() =>
   import("@/pages/AuthPage").then((m) => ({ default: m.AuthPage })),
 );
+const ExplorePage = lazy(() =>
+  import("@/pages/ExplorePage").then((m) => ({ default: m.ExplorePage })),
+);
 const StudioPage = lazy(() =>
   import("@/pages/StudioPage").then((m) => ({ default: m.StudioPage })),
 );
 const SeriesPage = lazy(() =>
   import("@/pages/SeriesPage").then((m) => ({ default: m.SeriesPage })),
+);
+const SeriesDetailPage = lazy(() =>
+  import("@/pages/SeriesDetailPage").then((m) => ({
+    default: m.SeriesDetailPage,
+  })),
 );
 const ProfilePage = lazy(() =>
   import("@/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })),
@@ -51,6 +59,7 @@ export function App() {
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/explore" element={<ExplorePage />} />
               <Route path="/login" element={<AuthPage initialMode="login" />} />
               <Route
                 path="/register"
@@ -60,6 +69,7 @@ export function App() {
               <Route path="/posts/:id" element={<PostDetailPage />} />
               <Route path="/studio" element={<StudioPage />} />
               <Route path="/series" element={<SeriesPage />} />
+              <Route path="/series/:id" element={<SeriesDetailPage />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/bookmarks" element={<BookmarksPage />} />
               <Route path="/profile" element={<ProfilePage />} />

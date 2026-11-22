@@ -8,3 +8,5 @@ export * from "./EmptyState";
 export * from "./HeroCarousel3D";
 export * from "./SectionHeader";
 export * from "./ConfirmModal";
+export * from "./Pagination";
+export * from "./PostCard";

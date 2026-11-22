@@ -58,7 +58,10 @@ const resilientBaseQuery: BaseQueryFn<
       Array.isArray(payload.data) &&
       payload.data.length === 0 &&
       typeof args === "string" &&
-      args.startsWith("/posts")
+      args.startsWith("/posts") &&
+      !args.includes("search=") &&
+      !args.includes("category=") &&
+      !args.includes("adSafeOnly=")
     ) {
       // If DB has 0 posts initially, show rich fallback posts alongside live DB
       return {
@@ -104,6 +107,17 @@ const resilientBaseQuery: BaseQueryFn<
     };
   }
 
+  // Latest 3 posts
+  if (url === "/posts/latest" && method === "GET") {
+    return {
+      data: {
+        success: true,
+        count: Math.min(3, localPosts.length),
+        data: localPosts.slice(0, 3),
+      },
+    };
+  }
+
   // Posts list
   if (
     url.startsWith("/posts") &&
@@ -114,10 +128,14 @@ const resilientBaseQuery: BaseQueryFn<
     const params = new URLSearchParams(queryStr);
     const category = params.get("category");
     const search = params.get("search")?.toLowerCase();
+    const adSafeOnly = params.get("adSafeOnly") === "true";
 
     let filtered = [...localPosts];
     if (category && category !== "All") {
       filtered = filtered.filter((p) => p.category === category);
+    }
+    if (adSafeOnly) {
+      filtered = filtered.filter((p) => p.isAdSafe !== false);
     }
     if (search) {
       filtered = filtered.filter(
@@ -127,15 +145,22 @@ const resilientBaseQuery: BaseQueryFn<
           p.tags.some((t) => t.toLowerCase().includes(search)),
       );
     }
+    const page = Math.max(1, Number(params.get("page")) || 1);
+    const limit = Math.max(1, Number(params.get("limit")) || 10);
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const start = (page - 1) * limit;
+    const paginated = filtered.slice(start, start + limit);
+
     return {
       data: {
         success: true,
-        data: filtered,
+        data: paginated,
         pagination: {
-          current: 1,
-          total: filtered.length,
-          page: 1,
-          totalPages: 1,
+          current: page,
+          total,
+          page,
+          totalPages,
         },
       },
     };
@@ -283,9 +308,9 @@ const resilientBaseQuery: BaseQueryFn<
     };
   }
 
-  // Post Comments
+  // Post Comments (no dummy comments on fallback)
   if (url.includes("/comments") && method === "GET") {
-    return { data: { success: true, data: localComments } };
+    return { data: { success: true, data: [] } };
   }
 
   if (url.includes("/comments") && method === "POST") {
@@ -538,9 +563,16 @@ const resilientBaseQuery: BaseQueryFn<
   }
 
   // Public Author Profile
-  if (url.startsWith("/users/") && url.endsWith("/profile") && method === "GET") {
+  if (
+    url.startsWith("/users/") &&
+    url.endsWith("/profile") &&
+    method === "GET"
+  ) {
     const totalViews = localPosts.reduce((acc, p) => acc + (p.views || 0), 0);
-    const totalLikes = localPosts.reduce((acc, p) => acc + (p.likesCount || 0), 0);
+    const totalLikes = localPosts.reduce(
+      (acc, p) => acc + (p.likesCount || 0),
+      0,
+    );
     return {
       data: {
         success: true,
@@ -662,6 +694,7 @@ export const buzzboardApi = createApi({
         search?: string;
         tag?: string;
         page?: number;
+        limit?: number;
         adSafeOnly?: boolean;
       } | void
     >({
@@ -672,10 +705,19 @@ export const buzzboardApi = createApi({
         if (params?.search) qs.set("search", params.search);
         if (params?.tag) qs.set("tag", params.tag);
         if (params?.page) qs.set("page", String(params.page));
+        if (params?.limit) qs.set("limit", String(params.limit));
         if (params?.adSafeOnly) qs.set("adSafeOnly", "true");
         const queryString = qs.toString();
         return `/posts${queryString ? `?${queryString}` : ""}`;
       },
+      providesTags: ["Post"],
+    }),
+
+    getLatestPosts: builder.query<
+      { success: boolean; count?: number; data: Post[] },
+      void
+    >({
+      query: () => "/posts/latest",
       providesTags: ["Post"],
     }),
 
@@ -899,6 +941,17 @@ export const buzzboardApi = createApi({
       providesTags: ["Series"],
     }),
 
+    getSeriesById: builder.query<
+      {
+        success: boolean;
+        data: { series: SeriesItem; totalParts: number; posts: Post[] };
+      },
+      string
+    >({
+      query: (idOrSlug) => `/series/${idOrSlug}`,
+      providesTags: ["Series", "Post"],
+    }),
+
     createSeries: builder.mutation<
       { success: boolean; data: SeriesItem },
       { title: string; description: string; category: string }
@@ -1048,6 +1101,7 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useGetPostsQuery,
+  useGetLatestPostsQuery,
   useGetPostByIdQuery,
   useCreatePostMutation,
   useLikePostMutation,
@@ -1064,6 +1118,7 @@ export const {
   useToggleBookmarkMutation,
   useGetPublicAuthorProfileQuery,
   useGetSeriesListQuery,
+  useGetSeriesByIdQuery,
   useCreateSeriesMutation,
   useGetActiveAdsQuery,
   useGetAllAdsQuery,

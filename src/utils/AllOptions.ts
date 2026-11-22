@@ -34,3 +34,9 @@ export const MONTH_NAMES = [
 ];
 
 export const DAY_HEADERS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+
+export const VERIFICATION_OPTIONS = [
+  { value: "all", label: "All Posts" },
+  { value: "verified", label: "Verified Only" },
+];

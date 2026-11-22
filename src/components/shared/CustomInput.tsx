@@ -45,7 +45,7 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full h-10 rounded-lg bg-white text-sm text-slate-900 placeholder:text-slate-400 border border-slate-200 transition-all duration-150 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15",
+              "w-full h-10 rounded-lg bg-white text-[13px] text-slate-900 placeholder:text-slate-400 border border-slate-200 transition-all duration-150 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15",
               leftIcon ? "pl-10" : "pl-3.5",
               rightElement ? "pr-11" : "pr-3.5",
               error &&
