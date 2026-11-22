@@ -6,6 +6,7 @@ import {
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "@/app/store";
+import { logout } from "@/features/auth/authSlice";
 import type {
   Post,
   User,
@@ -82,6 +83,14 @@ const resilientBaseQuery: BaseQueryFn<
 
   // If the live server responded with an HTTP status (e.g. 400, 401, 403, 404), return the real error
   if (result.error && typeof result.error.status === "number") {
+    const reqUrl = typeof args === "string" ? args : args.url;
+    if (
+      result.error.status === 401 &&
+      !reqUrl.includes("/login") &&
+      !reqUrl.includes("/register")
+    ) {
+      api.dispatch(logout());
+    }
     return result;
   }
 

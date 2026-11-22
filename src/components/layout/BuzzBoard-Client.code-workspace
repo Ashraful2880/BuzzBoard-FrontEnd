@@ -1,13 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "../../.."
-		},
-		{
-			"path": "../../../../BuzzBoard-server"
-		}
-	],
-	"settings": {
-		"prisma.pinToPrisma6": true
-	}
+    "folders": [
+        {
+            "path": "../../.."
+        }
+    ]
 }

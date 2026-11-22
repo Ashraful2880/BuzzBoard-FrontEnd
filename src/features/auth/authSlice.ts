@@ -4,8 +4,19 @@ import type { User, AuthState } from "@/types/authTypes";
 const storedUser = localStorage.getItem("buzzboard_user");
 const storedToken = localStorage.getItem("buzzboard_token");
 
+function parseStoredUser(raw: string | null): User | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as User;
+  } catch {
+    localStorage.removeItem("buzzboard_user");
+    localStorage.removeItem("buzzboard_token");
+    return null;
+  }
+}
+
 const initialState: AuthState = {
-  user: storedUser ? JSON.parse(storedUser) : null,
+  user: parseStoredUser(storedUser),
   token: storedToken || null,
 };
 

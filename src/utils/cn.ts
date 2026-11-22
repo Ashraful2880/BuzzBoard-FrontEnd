@@ -46,3 +46,18 @@ export function resolveMediaUrl(url?: string): string {
   }
   return url;
 }
+
+/**
+ * Safely opens an external HTTP/HTTPS URL in a new tab with noopener,noreferrer.
+ * Blocks javascript:, data:, or other unsafe schemes.
+ */
+export function safeOpenExternalUrl(url?: string): void {
+  if (!url) return;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return;
+    window.open(parsed.href, "_blank", "noopener,noreferrer");
+  } catch {
+    // Ignore malformed URLs
+  }
+}

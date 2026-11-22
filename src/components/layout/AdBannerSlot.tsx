@@ -5,6 +5,7 @@ import {
 import React from "react";
 import { ExternalLink } from "lucide-react";
 import type { AdBannerSlotProps } from "@/types/adTypes";
+import { safeOpenExternalUrl } from "@/utils/cn";
 import { TiltCard3D, CustomButton } from "@/components/shared";
 
 export const AdBannerSlot: React.FC<AdBannerSlotProps> = ({
@@ -25,7 +26,7 @@ export const AdBannerSlot: React.FC<AdBannerSlotProps> = ({
     } catch {
       // Ignore error
     }
-    window.open(ad.targetUrl, "_blank", "noopener,noreferrer");
+    safeOpenExternalUrl(ad.targetUrl);
   };
 
   return (

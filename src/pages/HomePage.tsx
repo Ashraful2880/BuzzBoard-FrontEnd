@@ -16,7 +16,7 @@ import {
 } from "@/features/api/buzzboardApi";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
-import { formatNumber } from "@/utils/cn";
+import { formatNumber, safeOpenExternalUrl } from "@/utils/cn";
 import { useAppSelector } from "@/app/hooks";
 import { useNavigate } from "react-router-dom";
 import { AdBannerSlot } from "@/components/layout/AdBannerSlot";
@@ -331,7 +331,7 @@ export const HomePage: React.FC = () => {
                   rightIcon={<ArrowUpRight className="w-3.5 h-3.5" />}
                   onClick={() => {
                     if (featuredAuthor?.website) {
-                      window.open(featuredAuthor.website, "_blank");
+                      safeOpenExternalUrl(featuredAuthor.website);
                     } else {
                       navigate(user ? "/studio" : "/series");
                     }

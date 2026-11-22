@@ -2,7 +2,7 @@ import { HomePage } from "@/pages/HomePage";
 import React, { Suspense, lazy } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { SkeletonLoader } from "@/components/shared";
+import { SkeletonLoader, ErrorBoundary } from "@/components/shared";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const AuthPage = lazy(() =>
@@ -56,26 +56,28 @@ export function App() {
         <Navbar />
 
         <main className="flex-1">
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/explore" element={<ExplorePage />} />
-              <Route path="/login" element={<AuthPage initialMode="login" />} />
-              <Route
-                path="/register"
-                element={<AuthPage initialMode="register" />}
-              />
-              <Route path="/auth/callback" element={<OAuthCallbackPage />} />
-              <Route path="/posts/:id" element={<PostDetailPage />} />
-              <Route path="/studio" element={<StudioPage />} />
-              <Route path="/series" element={<SeriesPage />} />
-              <Route path="/series/:id" element={<SeriesDetailPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/bookmarks" element={<BookmarksPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/explore" element={<ExplorePage />} />
+                <Route path="/login" element={<AuthPage initialMode="login" />} />
+                <Route
+                  path="/register"
+                  element={<AuthPage initialMode="register" />}
+                />
+                <Route path="/auth/callback" element={<OAuthCallbackPage />} />
+                <Route path="/posts/:id" element={<PostDetailPage />} />
+                <Route path="/studio" element={<StudioPage />} />
+                <Route path="/series" element={<SeriesPage />} />
+                <Route path="/series/:id" element={<SeriesDetailPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/bookmarks" element={<BookmarksPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </main>
 
         <Footer />
